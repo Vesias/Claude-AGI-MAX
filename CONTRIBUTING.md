@@ -35,17 +35,18 @@ Before creating a pull request, you can check if your commits can be merged by f
 2. **Be descriptive**: Provide enough context to understand the changes made.
 3. **Follow the project's guidelines**: Ensure that your commit messages follow the project's guidelines.
 4. **Check for typos and grammatical errors**: Review your commit messages for any typos or grammatical errors.
+5. **Check for clarity**: Ensure that your commit messages are clear and easy to understand.
 
 ## Guidelines for Reviewing Code Changes
 
 1. **Follow coding standards**: Ensure that the code changes follow the project's coding standards.
 2. **Check for potential bugs**: Look for any potential bugs or issues introduced by the changes.
 3. **Verify necessity**: Ensure that the changes are necessary and improve the project.
+4. **Check for adherence to coding standards**: Verify that the code changes adhere to the project's coding standards.
 
 ## Guidelines for Testing Changes
 
 1. **Run tests**: Run the project's tests to ensure that the changes do not break any existing functionality.
 2. **Perform manual testing**: Perform manual testing if necessary to verify that the changes work as expected.
 3. **Check for performance regressions**: Check for any performance regressions or improvements introduced by the changes.
-
-By following these guidelines and instructions, you can contribute effectively to the Claude-AGI-MAX project. Thank you for your contributions!
+4. **Test for performance improvements**: Ensure that the changes do not introduce any performance regressions and check for any performance improvements.
