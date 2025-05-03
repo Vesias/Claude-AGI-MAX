@@ -9,17 +9,11 @@
 # Erlaubte Basis-Komponenten der Claude-AGI-Infrastruktur
 !claude-terminal/**
 !claude-agi-projects/
-!claude-agi-projects/.project-config.json
-!claude-agi-projects/default-project/
-!claude-agi-projects/default-project/**
+!claude-agi-projects/**
 !memory-bank/
 !memory-bank/**
-!memory-bank/templates/
-!memory-bank/templates/**
 !.claude-agi/
 !.claude-agi/**
-!.claude-agi/services/
-!.claude-agi/services/**
 !.config/
 !.config/**
 !docs/
@@ -28,87 +22,36 @@
 !install-claude-agi.sh
 !CLAUDE.md
 !README.md
-!CONTRIBUTING.md
-!scripts/core/**
-!scripts/install.sh
-!scripts/install.ts
-
-# Schlüsseldateien für die Hauptintegrationen
-!claude-code-integration/**
-!monitoring-system/**
-!templates/**
-!vibe-coding-template/**
-
-# Wichtige READMEs und Dokumentation
-!LICENSE
-
-# Claude-AGI Workspace (ignoriert ALLE darin erstellten Dateien)
-.claude-agi/data/
-.claude-agi/logs/
 
 # Explizite Ausschlüsse sensibler Projekte
-.env*
-.about*
+goldankauf/
+goldankauf/**
+aclearallb.gg/
+aclearallb.gg/**
+sj-bandolerosz/
+sj-bandolerosz/**
+deepsleeping/
+deepsleeping/**
+SJ-Bandolerosz/**
+AClearAllB.gg/**
+DeepSleep/**
+DeepSleeping/**
+NeoAClearAllBGG/**
+
+# Standard-Ausschlüsse für Entwicklung
+.env
+.env.*
+.about
 **/node_modules/**
-**/dist/**
-**/build/**
-*secrets*
-**personal**
-**private**
-**/goldankauf/
-**/goldankauf/**
-**/aclearallb.gg/
-**/aclearallb.gg/**
-**/neoaclearallbgg/
-**/neoaclearallbgg/**
-**/AClearAllB*
-**/aclearallb*
-**/CustomGrow*
-**/DeepSleep*
-**/Goldankauf*
-**/sj-bandolerosz/
-**/sj-bandolerosz/**
-**/SJ-Bandoler*
-**/Bandolersoz*
-**/deepsleeping/
-**/deepsleeping/**
-
-# Dependency directories
-node_modules/
-jspm_packages/
-
-# TypeScript cache
-*.tsbuildinfo
-
-# IDE und Systemdateien
-.DS_Store
-.idea/
-.vscode/
-*.swp
-*.swo
-*~
-
-# Logs
-logs/
-**/logs/
+dist/
+build/
 *.log
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-
-# Backup und temporäre Dateien
-*.backup
-*.bak
-backup_temp/
-tmp/
-temp/
-.tmp/
-
-# Nutzerspezifische Projektdaten aber Konfigurationen erlauben
-!**/memory-bank/projectbrief.md
-!**/memory-bank/systemPatterns.md
-!**/memory-bank/techContext.md
-!**/memory-bank/sequentialThinking.config
-
-# Docx-Dateien von Dokumentation ausschließen (nur MD-Dateien erlauben)
-**/*.docx
+**/*.log
+.DS_Store
+.vscode/
+.idea/
+**secret**
+**secrets**
+**/secrets/**
+**apikey**
+**api-key**
