@@ -10,9 +10,16 @@
     "**/.git/**",
     "**/.env*",
     "**/goldankauf/**",
+    "**/goldankaufneunkrichen/**",
     "**/aclearallb.gg/**",
+    "**/aclearallb-new/**",
     "**/sj-bandolerosz/**",
-    "**/deepsleeping/**"
+    "**/sj-bandolersoz/**",
+    "**/deepsleeping/**",
+    "**/deepleeping/**",
+    "**/deepleeping.eu/**",
+    "**/nkuf-local-txmgr/**",
+    "**/customgrow-club/**"
   ],
   "memoryBankConfig": {
     "root": "/home/jan/Schreibtisch/CLAUDE/memory-bank",

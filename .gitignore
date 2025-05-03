@@ -9,7 +9,9 @@
 # Erlaubte Basis-Komponenten der Claude-AGI-Infrastruktur
 !claude-terminal/**
 !claude-agi-projects/
-!claude-agi-projects/**
+!claude-agi-projects/.project-config.json
+!claude-agi-projects/default-project/
+!claude-agi-projects/default-project/**
 !memory-bank/
 !memory-bank/**
 !.claude-agi/
