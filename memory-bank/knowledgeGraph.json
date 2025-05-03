@@ -1,166 +1,328 @@
 {
-  "entities": [
+  "nodes": [
     {
-      "id": "entity_001",
+      "id": "project_claude",
+      "concept": "CLAUDE",
       "type": "project",
-      "name": "CLAUDE",
-      "description": "Memory-Bank-System für Claude mit MCP-Integration",
-      "attributes": {
+      "properties": {
         "priority": "high",
         "status": "active",
-        "startDate": "2025-05-02"
+        "startDate": "2025-05-02",
+        "description": "Memory-Bank-System für Claude mit MCP-Integration"
       },
       "created": "2025-05-02T12:00:00Z",
-      "lastModified": "2025-05-02T12:00:00Z"
+      "updated": "2025-05-05T10:00:00Z"
     },
     {
-      "id": "entity_002",
+      "id": "component_memory_bank_core",
+      "concept": "Memory-Bank Core",
       "type": "component",
-      "name": "Memory-Bank Core",
-      "description": "Kernkomponenten der Memory-Bank (Markdown-Dateien)",
-      "attributes": {
+      "properties": {
         "status": "implemented",
-        "priority": "high"
+        "priority": "high",
+        "description": "Kernkomponenten der Memory-Bank (Markdown-Dateien)",
+        "version": "2.0.0"
       },
       "created": "2025-05-02T12:05:00Z",
-      "lastModified": "2025-05-02T12:05:00Z"
+      "updated": "2025-05-05T10:05:00Z"
     },
     {
-      "id": "entity_003",
+      "id": "component_mcp_integration",
+      "concept": "MCP Integration",
       "type": "component",
-      "name": "MCP Integration",
-      "description": "Integration mit Model Context Protocol",
-      "attributes": {
-        "status": "in_progress",
-        "priority": "high"
+      "properties": {
+        "status": "implemented",
+        "priority": "high",
+        "description": "Integration mit Model Context Protocol",
+        "version": "1.0.0"
       },
       "created": "2025-05-02T12:10:00Z",
-      "lastModified": "2025-05-02T12:10:00Z"
+      "updated": "2025-05-05T10:10:00Z"
     },
     {
-      "id": "entity_004",
+      "id": "feature_persistent_storage",
+      "concept": "Persistente Speicherung",
       "type": "feature",
-      "name": "Persistente Speicherung",
-      "description": "Speicherung von Informationen über Sitzungen hinweg",
-      "attributes": {
-        "status": "in_progress",
-        "priority": "high"
+      "properties": {
+        "status": "implemented",
+        "priority": "high",
+        "description": "Speicherung von Informationen über Sitzungen hinweg"
       },
       "created": "2025-05-02T12:15:00Z",
-      "lastModified": "2025-05-02T12:15:00Z"
+      "updated": "2025-05-05T10:15:00Z"
     },
     {
-      "id": "entity_005",
+      "id": "feature_sequential_thinking",
+      "concept": "Sequential Thinking",
       "type": "feature",
-      "name": "Sequential Thinking",
-      "description": "Strukturierte Problemlösung mit sequenziellem Denken",
-      "attributes": {
-        "status": "planned",
-        "priority": "medium"
+      "properties": {
+        "status": "implemented",
+        "priority": "high",
+        "description": "Strukturierte Problemlösung mit sequenziellem Denken",
+        "version": "2.0.0"
       },
       "created": "2025-05-02T12:20:00Z",
-      "lastModified": "2025-05-02T12:20:00Z"
+      "updated": "2025-05-05T10:20:00Z"
     },
     {
-      "id": "entity_006",
+      "id": "feature_knowledge_graph",
+      "concept": "Knowledge Graph",
+      "type": "feature",
+      "properties": {
+        "status": "implemented",
+        "priority": "high",
+        "description": "Semantisches Netzwerk für Projektwissen",
+        "version": "2.0.0"
+      },
+      "created": "2025-05-05T10:25:00Z",
+      "updated": "2025-05-05T10:25:00Z"
+    },
+    {
+      "id": "component_api",
+      "concept": "Memory Bank API",
+      "type": "component",
+      "properties": {
+        "status": "implemented",
+        "priority": "high",
+        "description": "Programmatische Schnittstellen zur Memory Bank",
+        "version": "1.0.0"
+      },
+      "created": "2025-05-05T10:30:00Z",
+      "updated": "2025-05-05T10:30:00Z"
+    },
+    {
+      "id": "component_cli",
+      "concept": "Memory Bank CLI",
+      "type": "component",
+      "properties": {
+        "status": "implemented",
+        "priority": "medium",
+        "description": "Kommandozeilen-Interface für Memory Bank",
+        "version": "1.0.0"
+      },
+      "created": "2025-05-05T10:35:00Z",
+      "updated": "2025-05-05T10:35:00Z"
+    },
+    {
+      "id": "actor_jan",
+      "concept": "Jan",
       "type": "actor",
-      "name": "Jan",
-      "description": "Technischer Entwickler mit Fokus auf Web, Blockchain und E-Commerce",
-      "attributes": {
+      "properties": {
         "role": "developer",
-        "preference": "technical_details"
+        "preference": "technical_details",
+        "description": "Technischer Entwickler mit Fokus auf Web, Blockchain und E-Commerce"
       },
       "created": "2025-05-02T12:25:00Z",
-      "lastModified": "2025-05-02T12:25:00Z"
+      "updated": "2025-05-05T10:40:00Z"
     },
     {
-      "id": "entity_007",
+      "id": "actor_claude",
+      "concept": "Claude",
       "type": "actor",
-      "name": "Serhan",
-      "description": "Business-orientierter Projektmanager",
-      "attributes": {
-        "role": "business",
-        "preference": "roi_focus"
+      "properties": {
+        "role": "ai_assistant",
+        "preference": "context_awareness",
+        "description": "KI-Assistent mit Fokus auf Kontext-Nutzung"
       },
-      "created": "2025-05-02T12:30:00Z",
-      "lastModified": "2025-05-02T12:30:00Z"
+      "created": "2025-05-05T10:45:00Z",
+      "updated": "2025-05-05T10:45:00Z"
+    },
+    {
+      "id": "technology_node_js",
+      "concept": "Node.js",
+      "type": "technology",
+      "properties": {
+        "version": "18+",
+        "description": "JavaScript-Laufzeitumgebung",
+        "usage": "Memory Bank APIs und CLI"
+      },
+      "created": "2025-05-05T10:50:00Z",
+      "updated": "2025-05-05T10:50:00Z"
+    },
+    {
+      "id": "technology_express_js",
+      "concept": "Express.js",
+      "type": "technology",
+      "properties": {
+        "version": "4.x",
+        "description": "Web-Framework für Node.js",
+        "usage": "API-Endpunkte"
+      },
+      "created": "2025-05-05T10:55:00Z",
+      "updated": "2025-05-05T10:55:00Z"
     }
   ],
-  "relationships": [
+  "edges": [
     {
-      "id": "rel_001",
-      "type": "part_of",
-      "source": "entity_002",
-      "target": "entity_001",
-      "attributes": {
-        "strength": "strong",
-        "bidirectional": false
+      "id": "memory_bank_core_part_of_claude",
+      "source": "component_memory_bank_core",
+      "target": "project_claude",
+      "relationship": "part_of",
+      "properties": {
+        "strength": "strong"
       },
-      "created": "2025-05-02T12:35:00Z"
+      "created": "2025-05-05T11:00:00Z",
+      "updated": "2025-05-05T11:00:00Z"
     },
     {
-      "id": "rel_002",
-      "type": "part_of",
-      "source": "entity_003",
-      "target": "entity_001",
-      "attributes": {
-        "strength": "strong",
-        "bidirectional": false
+      "id": "mcp_integration_part_of_claude",
+      "source": "component_mcp_integration",
+      "target": "project_claude",
+      "relationship": "part_of",
+      "properties": {
+        "strength": "strong"
       },
-      "created": "2025-05-02T12:36:00Z"
+      "created": "2025-05-05T11:01:00Z",
+      "updated": "2025-05-05T11:01:00Z"
     },
     {
-      "id": "rel_003",
-      "type": "associated_with",
-      "source": "entity_004",
-      "target": "entity_003",
-      "attributes": {
-        "strength": "strong",
-        "bidirectional": true
+      "id": "api_part_of_claude",
+      "source": "component_api",
+      "target": "project_claude",
+      "relationship": "part_of",
+      "properties": {
+        "strength": "strong"
       },
-      "created": "2025-05-02T12:37:00Z"
+      "created": "2025-05-05T11:02:00Z",
+      "updated": "2025-05-05T11:02:00Z"
     },
     {
-      "id": "rel_004",
-      "type": "associated_with",
-      "source": "entity_005",
-      "target": "entity_003",
-      "attributes": {
-        "strength": "medium",
-        "bidirectional": true
+      "id": "cli_part_of_claude",
+      "source": "component_cli",
+      "target": "project_claude",
+      "relationship": "part_of",
+      "properties": {
+        "strength": "medium"
       },
-      "created": "2025-05-02T12:38:00Z"
+      "created": "2025-05-05T11:03:00Z",
+      "updated": "2025-05-05T11:03:00Z"
     },
     {
-      "id": "rel_005",
-      "type": "depends_on",
-      "source": "entity_001",
-      "target": "entity_006",
-      "attributes": {
-        "strength": "strong",
-        "bidirectional": false
+      "id": "persistent_storage_part_of_memory_bank_core",
+      "source": "feature_persistent_storage",
+      "target": "component_memory_bank_core",
+      "relationship": "part_of",
+      "properties": {
+        "strength": "strong"
       },
-      "created": "2025-05-02T12:39:00Z"
+      "created": "2025-05-05T11:04:00Z",
+      "updated": "2025-05-05T11:04:00Z"
     },
     {
-      "id": "rel_006",
-      "type": "depends_on",
-      "source": "entity_001",
-      "target": "entity_007",
-      "attributes": {
-        "strength": "medium",
-        "bidirectional": false
+      "id": "sequential_thinking_part_of_memory_bank_core",
+      "source": "feature_sequential_thinking",
+      "target": "component_memory_bank_core",
+      "relationship": "part_of",
+      "properties": {
+        "strength": "strong"
       },
-      "created": "2025-05-02T12:40:00Z"
+      "created": "2025-05-05T11:05:00Z",
+      "updated": "2025-05-05T11:05:00Z"
+    },
+    {
+      "id": "knowledge_graph_part_of_memory_bank_core",
+      "source": "feature_knowledge_graph",
+      "target": "component_memory_bank_core",
+      "relationship": "part_of",
+      "properties": {
+        "strength": "strong"
+      },
+      "created": "2025-05-05T11:06:00Z",
+      "updated": "2025-05-05T11:06:00Z"
+    },
+    {
+      "id": "sequential_thinking_implements_api",
+      "source": "feature_sequential_thinking",
+      "target": "component_api",
+      "relationship": "implements",
+      "properties": {
+        "strength": "strong"
+      },
+      "created": "2025-05-05T11:07:00Z",
+      "updated": "2025-05-05T11:07:00Z"
+    },
+    {
+      "id": "knowledge_graph_implements_api",
+      "source": "feature_knowledge_graph",
+      "target": "component_api",
+      "relationship": "implements",
+      "properties": {
+        "strength": "strong"
+      },
+      "created": "2025-05-05T11:08:00Z",
+      "updated": "2025-05-05T11:08:00Z"
+    },
+    {
+      "id": "cli_uses_api",
+      "source": "component_cli",
+      "target": "component_api",
+      "relationship": "uses",
+      "properties": {
+        "strength": "strong"
+      },
+      "created": "2025-05-05T11:09:00Z",
+      "updated": "2025-05-05T11:09:00Z"
+    },
+    {
+      "id": "jan_created_claude",
+      "source": "actor_jan",
+      "target": "project_claude",
+      "relationship": "created",
+      "properties": {
+        "strength": "strong"
+      },
+      "created": "2025-05-05T11:10:00Z",
+      "updated": "2025-05-05T11:10:00Z"
+    },
+    {
+      "id": "claude_uses_memory_bank_core",
+      "source": "actor_claude",
+      "target": "component_memory_bank_core",
+      "relationship": "uses",
+      "properties": {
+        "strength": "strong"
+      },
+      "created": "2025-05-05T11:11:00Z",
+      "updated": "2025-05-05T11:11:00Z"
+    },
+    {
+      "id": "component_api_uses_node_js",
+      "source": "component_api",
+      "target": "technology_node_js",
+      "relationship": "uses",
+      "properties": {
+        "strength": "strong"
+      },
+      "created": "2025-05-05T11:12:00Z",
+      "updated": "2025-05-05T11:12:00Z"
+    },
+    {
+      "id": "component_api_uses_express_js",
+      "source": "component_api",
+      "target": "technology_express_js",
+      "relationship": "uses",
+      "properties": {
+        "strength": "medium"
+      },
+      "created": "2025-05-05T11:13:00Z",
+      "updated": "2025-05-05T11:13:00Z"
+    },
+    {
+      "id": "component_cli_uses_node_js",
+      "source": "component_cli",
+      "target": "technology_node_js",
+      "relationship": "uses",
+      "properties": {
+        "strength": "strong"
+      },
+      "created": "2025-05-05T11:14:00Z",
+      "updated": "2025-05-05T11:14:00Z"
     }
   ],
   "metadata": {
-    "version": "1.0",
-    "lastUpdated": "2025-05-02T12:45:00Z",
-    "description": "Wissensgraph für CLAUDE Memory-Bank-System"
-  },
-  "settings": {
-    "entityTypes": ["concept", "feature", "component", "task", "actor"],
-    "relationshipTypes": ["depends_on", "part_of", "associated_with", "causes", "influences"]
+    "version": "2.0.0",
+    "created": "2025-05-02T12:00:00Z",
+    "updated": "2025-05-05T11:15:00Z",
+    "description": "Knowledge Graph für CLAUDE Memory-Bank-System v2.0"
   }
 }
