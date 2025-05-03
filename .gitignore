@@ -75,10 +75,14 @@ build/
 *secrets*
 **personal**
 **private**
-**AClearAllB**
-**CustomGrow**
-**DeepSleep**
-**Bandolersoz**
+**/neoaclearallbgg/**
+**/AClearAllB*
+**/aclearallb*
+**/CustomGrow*
+**/DeepSleep*
+**/Goldankauf*
+**/SJ-Bandoler*
+**/Bandolersoz*
 
 # Zusätzliche Regeln für node_modules innerhalb erlaubter Verzeichnisse
 claude-terminal/node_modules/
