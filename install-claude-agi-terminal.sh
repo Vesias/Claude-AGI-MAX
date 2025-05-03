@@ -113,6 +113,7 @@ create_memory_bank() {
   
   # Hauptverzeichnis
   mkdir -p "$MEMORY_BANK_DIR/templates"
+  mkdir -p "$MEMORY_BANK_DIR/apis"
   
   # Standard-Template-Dateien erstellen
   cat > "$MEMORY_BANK_DIR/templates/projectbrief.md" << EOL
@@ -159,6 +160,9 @@ Beschreibung der aktuellen Aufgabe oder des aktuellen Features, an dem gearbeite
 1. Schritt 1
 2. Schritt 2
 3. Schritt 3
+
+## Sequential Thinking Ergebnisse
+Hier werden automatisch die Ergebnisse von Sequential Thinking Analysen hinzugefügt.
 EOL
 
   cat > "$MEMORY_BANK_DIR/templates/techContext.md" << EOL
@@ -240,13 +244,53 @@ EOL
 - Hinweis 1
 EOL
 
-  # README für das Memory-Bank-System
+  # Knowledge Graph JSON Template
+  cat > "$MEMORY_BANK_DIR/templates/knowledgeGraph.json" << EOL
+{
+  "nodes": [],
+  "edges": [],
+  "metadata": {
+    "version": "1.0.0",
+    "created": "$(date -Iseconds)",
+    "updated": "$(date -Iseconds)",
+    "description": "Knowledge Graph für semantische Beziehungen zwischen Konzepten im Projekt"
+  }
+}
+EOL
+
+  # Sequential Thinking Config Template
+  cat > "$MEMORY_BANK_DIR/templates/sequentialThinking.config" << EOL
+{
+  "mcpEndpoint": "http://localhost:3000/api/sequential-thinking",
+  "maxSteps": 5,
+  "storeHistory": true,
+  "appendToActiveContext": true,
+  "thinkingModels": {
+    "problem-solving": {
+      "steps": ["Problem verstehen", "Lösungsansätze entwickeln", "Optionen bewerten", "Lösungsplan erstellen", "Umsetzung planen"],
+      "description": "Allgemeines Problemlösungsmodell für vielfältige Herausforderungen"
+    },
+    "code-design": {
+      "steps": ["Anforderungen analysieren", "Schnittstellen definieren", "Komponenten entwerfen", "Datenstrukturen definieren", "Implementierungsplan erstellen"],
+      "description": "Für Software-Design und Architekturentscheidungen"
+    },
+    "feature-planning": {
+      "steps": ["Nutzerbedürfnisse verstehen", "Akzeptanzkriterien definieren", "Technische Machbarkeit prüfen", "Umsetzungsschritte planen", "Tests definieren"],
+      "description": "Für die Planung neuer Features und Funktionen"
+    }
+  }
+}
+EOL
+
+  # README für das Memory-Bank-System v2.0
   cat > "$MEMORY_BANK_DIR/README.md" << EOL
-# Memory Bank System
+# Memory Bank System v2.0
 
-Das Memory Bank System ist ein strukturierter Ansatz zur Speicherung und Verwaltung von Projektkontext für das CLAUDE-AGI-Ökosystem.
+Das Memory Bank System ist ein strukturierter Ansatz zur Speicherung und Verwaltung von Projektkontext für das CLAUDE-AGI-Ökosystem. Version 2.0 erweitert das System um Knowledge Graph APIs und Sequential Thinking für fortschrittliche Kontextverwaltung.
 
-## Struktur
+## Kern-Komponenten
+
+### Strukturierte Markdown-Dokumente
 
 Jedes Projekt verwendet die folgenden standardisierten Dateien:
 
@@ -256,12 +300,31 @@ Jedes Projekt verwendet die folgenden standardisierten Dateien:
 - **systemPatterns.md**: Architektur und Design-Patterns
 - **progress.md**: Fortschritt, abgeschlossene und geplante Aufgaben
 
+### Knowledge Graph API
+
+Die Knowledge Graph API ermöglicht es, semantische Beziehungen zwischen Konzepten im Projekt zu speichern und abzufragen:
+
+- Konzepte und Beziehungen automatisch aus Projektdateien extrahieren
+- Semantische Abfragen über verwandte Konzepte durchführen
+- Visualisierungen des Projektwissens generieren
+
+### Sequential Thinking API
+
+Die Sequential Thinking API bietet strukturierte Denkprozesse mit MCP-Integration:
+
+- Verschiedene Denkmodelle für unterschiedliche Problemtypen
+- Integration mit dem Sequential Thinking MCP Tool
+- Persistente Speicherung von Denkprozessen und Ergebnissen
+
 ## Verwendung
 
 1. Kopiere die Templates in das memory-bank-Verzeichnis deines Projekts
 2. Passe die Dateien an dein spezifisches Projekt an
-3. Halte die Dateien aktuell, wenn sich der Projektkontext ändert
-4. Nutze die Memory-Bank für kontinuierliche Arbeit mit Claude
+3. Nutze die Memory-Bank APIs für fortgeschrittene Funktionen:
+   - \`node apis/cli.js update /pfad/zum/projekt\`
+   - \`node apis/cli.js extract-knowledge /pfad/zum/projekt\`
+   - \`node apis/cli.js think "Wie löse ich Problem X?"\`
+   - \`node apis/cli.js visualize-graph /pfad/zum/projekt\`
 
 ## Integration
 
@@ -270,7 +333,1266 @@ Das Memory-Bank-System ist vollständig in das CLAUDE-AGI-Ökosystem integriert:
 - Automatische Erkennung durch Claude Terminal
 - MCP-Integration über memory-bank-mcp Tool
 - Projekt-spezifische Memory-Banks in der standardisierten Struktur
+- Fortschrittliche APIs für Knowledge Graph und Sequential Thinking
 EOL
+
+  # package.json für Memory Bank APIs erstellen
+  cat > "$MEMORY_BANK_DIR/package.json" << EOL
+{
+  "name": "claude-agi-memory-bank",
+  "version": "2.0.0",
+  "description": "Memory Bank System mit Knowledge Graph und Sequential Thinking APIs für das CLAUDE-AGI-Ökosystem",
+  "main": "apis/index.js",
+  "scripts": {
+    "update": "node apis/cli.js update",
+    "extract-knowledge": "node apis/cli.js extract-knowledge",
+    "think": "node apis/cli.js think",
+    "visualize": "node apis/cli.js visualize-graph"
+  },
+  "dependencies": {
+    "axios": "^1.6.2",
+    "fs-extra": "^11.1.1"
+  }
+}
+EOL
+
+  # Installiere Abhängigkeiten, wenn möglich
+  if command -v npm &> /dev/null; then
+    log "INFO" "Installiere Memory Bank API Abhängigkeiten..."
+    cd "$MEMORY_BANK_DIR" && npm install --no-fund --no-audit 2>/dev/null || {
+      log "WARNING" "NPM-Installation fehlgeschlagen, versuche mit --legacy-peer-deps..."
+      cd "$MEMORY_BANK_DIR" && npm install --legacy-peer-deps --no-fund --no-audit 2>/dev/null || {
+        log "WARNING" "Memory Bank Abhängigkeiten konnten nicht installiert werden. Sie müssen später manuell installiert werden."
+      }
+    }
+  else
+    log "WARNING" "npm nicht gefunden. Memory Bank API Abhängigkeiten müssen manuell installiert werden."
+  fi
+  
+  # Knowledge Graph API erstellen
+  cat > "$MEMORY_BANK_DIR/apis/knowledgeGraphAPI.js" << 'EOL'
+/**
+ * Knowledge Graph API for CLAUDE AGI Memory Bank
+ * 
+ * This API provides functions for creating, managing, and querying a knowledge graph
+ * to store semantic relationships between concepts in the CLAUDE AGI ecosystem.
+ * 
+ * Version: 1.0.0
+ */
+
+const fs = require('fs');
+const path = require('path');
+
+class KnowledgeGraphAPI {
+  constructor(projectPath) {
+    this.projectPath = projectPath;
+    this.graphPath = path.join(projectPath, 'memory-bank', 'knowledgeGraph.json');
+    this.graph = this.loadGraph();
+  }
+
+  /**
+   * Load the knowledge graph from disk
+   */
+  loadGraph() {
+    try {
+      if (fs.existsSync(this.graphPath)) {
+        const data = fs.readFileSync(this.graphPath, 'utf8');
+        return JSON.parse(data);
+      }
+      
+      // Initialize empty graph if none exists
+      return {
+        nodes: [],
+        edges: [],
+        metadata: {
+          version: '1.0.0',
+          created: new Date().toISOString(),
+          updated: new Date().toISOString()
+        }
+      };
+    } catch (error) {
+      console.error(`Error loading knowledge graph: ${error.message}`);
+      return {
+        nodes: [],
+        edges: [],
+        metadata: {
+          version: '1.0.0',
+          created: new Date().toISOString(),
+          updated: new Date().toISOString()
+        }
+      };
+    }
+  }
+
+  /**
+   * Save the current graph to disk
+   */
+  saveGraph() {
+    try {
+      // Update the 'updated' timestamp
+      this.graph.metadata.updated = new Date().toISOString();
+      
+      // Ensure the directory exists
+      const dir = path.dirname(this.graphPath);
+      if (!fs.existsSync(dir)) {
+        fs.mkdirSync(dir, { recursive: true });
+      }
+      
+      fs.writeFileSync(this.graphPath, JSON.stringify(this.graph, null, 2), 'utf8');
+      return true;
+    } catch (error) {
+      console.error(`Error saving knowledge graph: ${error.message}`);
+      return false;
+    }
+  }
+
+  /**
+   * Add a new concept node to the graph
+   * @param {string} concept - The concept name
+   * @param {string} type - The type of the concept (e.g., 'component', 'technology', 'feature')
+   * @param {Object} properties - Additional properties of the concept
+   * @returns {string} The ID of the newly created node
+   */
+  addConcept(concept, type, properties = {}) {
+    const id = `${type}_${concept.replace(/\s+/g, '_').toLowerCase()}`;
+    
+    // Check if the node already exists
+    const existingNode = this.graph.nodes.find(node => node.id === id);
+    if (existingNode) {
+      // Update existing node
+      existingNode.properties = { ...existingNode.properties, ...properties };
+      existingNode.updated = new Date().toISOString();
+      this.saveGraph();
+      return id;
+    }
+    
+    // Create new node
+    const newNode = {
+      id,
+      concept,
+      type,
+      properties,
+      created: new Date().toISOString(),
+      updated: new Date().toISOString()
+    };
+    
+    this.graph.nodes.push(newNode);
+    this.saveGraph();
+    return id;
+  }
+
+  /**
+   * Add a relationship between two concepts
+   * @param {string} sourceId - The ID of the source node
+   * @param {string} targetId - The ID of the target node
+   * @param {string} relationship - The type of relationship
+   * @param {Object} properties - Additional properties of the relationship
+   * @returns {boolean} Success of the operation
+   */
+  addRelationship(sourceId, targetId, relationship, properties = {}) {
+    // Validate that both nodes exist
+    const sourceExists = this.graph.nodes.some(node => node.id === sourceId);
+    const targetExists = this.graph.nodes.some(node => node.id === targetId);
+    
+    if (!sourceExists || !targetExists) {
+      console.error(`Cannot create relationship: one or both nodes don't exist`);
+      return false;
+    }
+    
+    const edgeId = `${sourceId}_${relationship}_${targetId}`;
+    
+    // Check if the edge already exists
+    const existingEdge = this.graph.edges.find(edge => edge.id === edgeId);
+    if (existingEdge) {
+      // Update existing edge
+      existingEdge.properties = { ...existingEdge.properties, ...properties };
+      existingEdge.updated = new Date().toISOString();
+      this.saveGraph();
+      return true;
+    }
+    
+    // Create new edge
+    const newEdge = {
+      id: edgeId,
+      source: sourceId,
+      target: targetId,
+      relationship,
+      properties,
+      created: new Date().toISOString(),
+      updated: new Date().toISOString()
+    };
+    
+    this.graph.edges.push(newEdge);
+    this.saveGraph();
+    return true;
+  }
+
+  /**
+   * Query the graph for nodes that match given criteria
+   * @param {Object} criteria - Criteria to match against node properties
+   * @returns {Array} Matching nodes
+   */
+  queryConcepts(criteria = {}) {
+    return this.graph.nodes.filter(node => {
+      for (const [key, value] of Object.entries(criteria)) {
+        if (key === 'properties') {
+          for (const [propKey, propValue] of Object.entries(value)) {
+            if (!node.properties || node.properties[propKey] !== propValue) {
+              return false;
+            }
+          }
+        } else if (node[key] !== value) {
+          return false;
+        }
+      }
+      return true;
+    });
+  }
+
+  /**
+   * Find all relationships for a given concept
+   * @param {string} conceptId - The ID of the concept
+   * @returns {Object} Object containing incoming and outgoing relationships
+   */
+  getConceptRelationships(conceptId) {
+    const outgoing = this.graph.edges.filter(edge => edge.source === conceptId);
+    const incoming = this.graph.edges.filter(edge => edge.target === conceptId);
+    
+    return { outgoing, incoming };
+  }
+
+  /**
+   * Find the shortest path between two concepts
+   * @param {string} sourceId - Starting concept ID
+   * @param {string} targetId - Target concept ID
+   * @returns {Array|null} Array of nodes and edges in the path, or null if no path exists
+   */
+  findShortestPath(sourceId, targetId) {
+    if (sourceId === targetId) {
+      return [{ node: this.graph.nodes.find(node => node.id === sourceId) }];
+    }
+    
+    // Breadth-first search
+    const queue = [{ node: sourceId, path: [{ node: sourceId }] }];
+    const visited = new Set([sourceId]);
+    
+    while (queue.length > 0) {
+      const { node: currentId, path } = queue.shift();
+      
+      // Get all connected nodes (both outgoing and incoming)
+      const outgoingEdges = this.graph.edges.filter(edge => edge.source === currentId);
+      
+      for (const edge of outgoingEdges) {
+        if (edge.target === targetId) {
+          // Found the target
+          const finalNode = this.graph.nodes.find(node => node.id === targetId);
+          return [
+            ...path,
+            { 
+              edge,
+              direction: 'outgoing'
+            },
+            { 
+              node: finalNode
+            }
+          ];
+        }
+        
+        if (!visited.has(edge.target)) {
+          visited.add(edge.target);
+          const nextNode = this.graph.nodes.find(node => node.id === edge.target);
+          queue.push({
+            node: edge.target,
+            path: [
+              ...path,
+              { 
+                edge,
+                direction: 'outgoing'
+              },
+              { 
+                node: nextNode
+              }
+            ]
+          });
+        }
+      }
+      
+      // Also check incoming edges
+      const incomingEdges = this.graph.edges.filter(edge => edge.target === currentId);
+      
+      for (const edge of incomingEdges) {
+        if (edge.source === targetId) {
+          // Found the target
+          const finalNode = this.graph.nodes.find(node => node.id === targetId);
+          return [
+            ...path,
+            { 
+              edge,
+              direction: 'incoming'
+            },
+            { 
+              node: finalNode
+            }
+          ];
+        }
+        
+        if (!visited.has(edge.source)) {
+          visited.add(edge.source);
+          const nextNode = this.graph.nodes.find(node => node.id === edge.source);
+          queue.push({
+            node: edge.source,
+            path: [
+              ...path,
+              { 
+                edge,
+                direction: 'incoming'
+              },
+              { 
+                node: nextNode
+              }
+            ]
+          });
+        }
+      }
+    }
+    
+    // No path found
+    return null;
+  }
+
+  /**
+   * Extract concepts from a markdown text and add them to the graph
+   * @param {string} text - Markdown text to analyze
+   * @param {string} type - Default type for extracted concepts
+   * @param {Array} existingConcepts - List of existing concepts to match against
+   * @returns {Array} Newly identified concepts
+   */
+  extractConceptsFromText(text, type = 'concept', existingConcepts = []) {
+    // Get all existing concept names for matching
+    const existingNames = existingConcepts.length > 0 
+      ? existingConcepts 
+      : this.graph.nodes.map(node => node.concept);
+    
+    // Simple extraction strategy - look for capitalized phrases and items in lists
+    const capitalizedRegex = /\b[A-Z][a-zA-Z0-9]+([ -][A-Z][a-zA-Z0-9]+)*\b/g;
+    const listItemRegex = /[*-]\s+([A-Z][a-zA-Z0-9]+([ -][a-zA-Z0-9]+)*)/g;
+    
+    const conceptMatches = [
+      ...(text.match(capitalizedRegex) || []),
+      ...((text.match(listItemRegex) || []).map(match => match.replace(/[*-]\s+/, '')))
+    ];
+    
+    // Filter for unique concepts and remove any that already exist
+    const uniqueConcepts = [...new Set(conceptMatches)]
+      .filter(concept => !existingNames.includes(concept));
+    
+    // Add each new concept
+    const addedConcepts = [];
+    
+    for (const concept of uniqueConcepts) {
+      const id = this.addConcept(concept, type, {
+        extractedFrom: 'text',
+        confidence: 'low'
+      });
+      
+      addedConcepts.push({
+        id,
+        concept
+      });
+    }
+    
+    return addedConcepts;
+  }
+
+  /**
+   * Update the graph with concepts extracted from all memory bank text files
+   * @returns {Object} Summary of updates made
+   */
+  updateFromMemoryBank() {
+    const memoryBankPath = path.join(this.projectPath, 'memory-bank');
+    const fileTypes = [
+      'activeContext.md',
+      'productContext.md',
+      'projectbrief.md',
+      'systemPatterns.md',
+      'techContext.md',
+      'progress.md'
+    ];
+    
+    const summary = {
+      filesProcessed: 0,
+      conceptsAdded: 0,
+      relationshipsAdded: 0
+    };
+    
+    for (const fileType of fileTypes) {
+      const filePath = path.join(memoryBankPath, fileType);
+      
+      if (fs.existsSync(filePath)) {
+        try {
+          const content = fs.readFileSync(filePath, 'utf8');
+          
+          // Determine concept type based on file
+          let conceptType = 'concept';
+          if (fileType === 'techContext.md') conceptType = 'technology';
+          if (fileType === 'systemPatterns.md') conceptType = 'pattern';
+          if (fileType === 'productContext.md') conceptType = 'feature';
+          
+          const addedConcepts = this.extractConceptsFromText(content, conceptType);
+          summary.conceptsAdded += addedConcepts.length;
+          
+          // If this is a new file being processed, add a relationship from the file to the concepts
+          const fileNodeId = `file_${fileType.replace('.md', '')}`;
+          const fileExists = this.graph.nodes.some(node => node.id === fileNodeId);
+          
+          if (!fileExists) {
+            this.addConcept(fileType.replace('.md', ''), 'file', {
+              path: filePath,
+              type: 'memory-bank-file'
+            });
+            
+            // Add relationships from file to concepts
+            for (const { id } of addedConcepts) {
+              this.addRelationship(fileNodeId, id, 'contains');
+              summary.relationshipsAdded++;
+            }
+          }
+          
+          summary.filesProcessed++;
+        } catch (error) {
+          console.error(`Error processing ${filePath}: ${error.message}`);
+        }
+      }
+    }
+    
+    return summary;
+  }
+
+  /**
+   * Generate a visual representation of the graph
+   * @param {string} format - Output format ('json', 'graphviz', 'html')
+   * @returns {string} Graph representation in the specified format
+   */
+  visualize(format = 'json') {
+    if (format === 'json') {
+      return JSON.stringify(this.graph, null, 2);
+    }
+    
+    if (format === 'graphviz') {
+      let dot = 'digraph G {\n';
+      
+      // Add nodes
+      for (const node of this.graph.nodes) {
+        const label = `${node.concept} (${node.type})`;
+        dot += `  "${node.id}" [label="${label}"];\n`;
+      }
+      
+      // Add edges
+      for (const edge of this.graph.edges) {
+        dot += `  "${edge.source}" -> "${edge.target}" [label="${edge.relationship}"];\n`;
+      }
+      
+      dot += '}';
+      return dot;
+    }
+    
+    if (format === 'html') {
+      return `
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Knowledge Graph Visualization</title>
+  <style>
+    body { font-family: sans-serif; }
+    #graph { width: 100%; height: 600px; border: 1px solid #ccc; }
+    .info { padding: 10px; background: #f5f5f5; border-radius: 5px; }
+  </style>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/vis-network.min.js"></script>
+</head>
+<body>
+  <h1>Knowledge Graph Visualization</h1>
+  <div class="info">
+    <p>Nodes: ${this.graph.nodes.length} | Edges: ${this.graph.edges.length}</p>
+  </div>
+  <div id="graph"></div>
+  
+  <script>
+    const graph = ${JSON.stringify(this.graph)};
+    
+    // Prepare data for visualization
+    const nodes = graph.nodes.map(node => ({
+      id: node.id,
+      label: node.concept,
+      title: \`Type: \${node.type}<br>Properties: \${JSON.stringify(node.properties)}\`,
+      group: node.type
+    }));
+    
+    const edges = graph.edges.map(edge => ({
+      from: edge.source,
+      to: edge.target,
+      label: edge.relationship,
+      arrows: 'to'
+    }));
+    
+    // Create network
+    const container = document.getElementById('graph');
+    const data = { nodes, edges };
+    const options = {
+      nodes: {
+        shape: 'dot',
+        size: 16
+      },
+      physics: {
+        stabilization: false,
+        barnesHut: {
+          gravitationalConstant: -80,
+          springConstant: 0.001,
+          springLength: 200
+        }
+      }
+    };
+    
+    new vis.Network(container, data, options);
+  </script>
+</body>
+</html>
+      `.trim();
+    }
+    
+    return this.graph;
+  }
+}
+
+module.exports = KnowledgeGraphAPI;
+EOL
+
+  log "INFO" "Knowledge Graph API erstellt."
+  
+  # Sequential Thinking API erstellen
+  cat > "$MEMORY_BANK_DIR/apis/sequentialThinkingAPI.js" << 'EOL'
+/**
+ * Sequential Thinking API for CLAUDE AGI Memory Bank
+ * 
+ * This API provides an interface for structured problem-solving with sequential thinking.
+ * It integrates with the Sequential Thinking MCP tool and persists reasoning steps in the memory bank.
+ * 
+ * Version: 1.0.0
+ */
+
+const fs = require('fs');
+const path = require('path');
+const axios = require('axios');
+
+class SequentialThinkingAPI {
+  constructor(projectPath, config = {}) {
+    this.projectPath = projectPath;
+    this.configPath = path.join(projectPath, 'memory-bank', 'sequentialThinking.config');
+    this.historyPath = path.join(projectPath, 'memory-bank', 'sequentialThinking.history.json');
+    
+    // Default config
+    this.config = {
+      mcpEndpoint: 'http://localhost:3000/api/sequential-thinking',
+      maxSteps: 5,
+      storeHistory: true,
+      appendToActiveContext: true,
+      ...config
+    };
+    
+    this.loadConfig();
+    this.history = this.loadHistory();
+  }
+
+  /**
+   * Load configuration from disk
+   */
+  loadConfig() {
+    try {
+      if (fs.existsSync(this.configPath)) {
+        const data = fs.readFileSync(this.configPath, 'utf8');
+        const loadedConfig = JSON.parse(data);
+        this.config = { ...this.config, ...loadedConfig };
+      } else {
+        // Save default config
+        this.saveConfig();
+      }
+    } catch (error) {
+      console.error(`Error loading sequential thinking config: ${error.message}`);
+    }
+  }
+
+  /**
+   * Save configuration to disk
+   */
+  saveConfig() {
+    try {
+      const dir = path.dirname(this.configPath);
+      if (!fs.existsSync(dir)) {
+        fs.mkdirSync(dir, { recursive: true });
+      }
+      
+      fs.writeFileSync(this.configPath, JSON.stringify(this.config, null, 2), 'utf8');
+      return true;
+    } catch (error) {
+      console.error(`Error saving sequential thinking config: ${error.message}`);
+      return false;
+    }
+  }
+
+  /**
+   * Load thinking history from disk
+   */
+  loadHistory() {
+    try {
+      if (fs.existsSync(this.historyPath)) {
+        const data = fs.readFileSync(this.historyPath, 'utf8');
+        return JSON.parse(data);
+      }
+      
+      return [];
+    } catch (error) {
+      console.error(`Error loading sequential thinking history: ${error.message}`);
+      return [];
+    }
+  }
+
+  /**
+   * Save thinking history to disk
+   */
+  saveHistory() {
+    if (!this.config.storeHistory) return false;
+    
+    try {
+      const dir = path.dirname(this.historyPath);
+      if (!fs.existsSync(dir)) {
+        fs.mkdirSync(dir, { recursive: true });
+      }
+      
+      fs.writeFileSync(this.historyPath, JSON.stringify(this.history, null, 2), 'utf8');
+      return true;
+    } catch (error) {
+      console.error(`Error saving sequential thinking history: ${error.message}`);
+      return false;
+    }
+  }
+
+  /**
+   * Add a thinking session to history
+   * @param {Object} session - The thinking session to add
+   */
+  addToHistory(session) {
+    if (!this.config.storeHistory) return;
+    
+    this.history.push(session);
+    while (this.history.length > 50) { // Keep only the last 50 sessions
+      this.history.shift();
+    }
+    
+    this.saveHistory();
+  }
+
+  /**
+   * Execute a sequential thinking process
+   * @param {string} problem - The problem to solve
+   * @param {Object} options - Additional options
+   * @returns {Object} The thinking session result
+   */
+  async think(problem, options = {}) {
+    const sessionOptions = {
+      steps: this.config.maxSteps,
+      appendToActiveContext: this.config.appendToActiveContext,
+      ...options
+    };
+    
+    // Initialize session
+    const session = {
+      id: `thinking_${Date.now()}`,
+      problem,
+      options: sessionOptions,
+      steps: [],
+      conclusion: null,
+      created: new Date().toISOString()
+    };
+    
+    try {
+      // Use MCP Sequential Thinking if available
+      if (this.config.mcpEndpoint) {
+        const response = await this.callMcpService(problem, sessionOptions);
+        
+        if (response && response.data) {
+          const { steps, conclusion } = response.data;
+          session.steps = steps;
+          session.conclusion = conclusion;
+        }
+      } else {
+        // Fallback to structured format without MCP
+        session.steps = [
+          {
+            id: 1,
+            title: 'Problem Analysis',
+            content: `Analyzing the problem: ${problem}`
+          },
+          {
+            id: 2,
+            title: 'Potential Approaches',
+            content: 'Listing potential approaches to solving this problem.'
+          }
+        ];
+        session.conclusion = 'No MCP service available for sequential thinking. This is a placeholder conclusion.';
+      }
+      
+      // Update session
+      session.completed = new Date().toISOString();
+      
+      // Store in history
+      this.addToHistory(session);
+      
+      // Append to active context if configured
+      if (sessionOptions.appendToActiveContext) {
+        this.appendToActiveContext(session);
+      }
+      
+      return session;
+    } catch (error) {
+      console.error(`Error in sequential thinking: ${error.message}`);
+      
+      // Create error session
+      session.error = error.message;
+      session.completed = new Date().toISOString();
+      this.addToHistory(session);
+      
+      throw error;
+    }
+  }
+
+  /**
+   * Call the MCP Sequential Thinking service
+   * @param {string} problem - The problem to solve
+   * @param {Object} options - Additional options
+   * @returns {Object} The service response
+   */
+  async callMcpService(problem, options) {
+    try {
+      const response = await axios.post(this.config.mcpEndpoint, {
+        problem,
+        options
+      });
+      
+      return response;
+    } catch (error) {
+      console.error(`Error calling Sequential Thinking MCP: ${error.message}`);
+      throw error;
+    }
+  }
+
+  /**
+   * Append thinking result to active context
+   * @param {Object} session - The thinking session
+   */
+  appendToActiveContext(session) {
+    const activeContextPath = path.join(this.projectPath, 'memory-bank', 'activeContext.md');
+    
+    try {
+      let content = '';
+      if (fs.existsSync(activeContextPath)) {
+        content = fs.readFileSync(activeContextPath, 'utf8');
+      }
+      
+      // Create markdown for the thinking session
+      let thinkingMd = `\n\n## Sequential Thinking: ${session.problem}\n`;
+      thinkingMd += `*Generated at: ${new Date(session.created).toLocaleString()}*\n\n`;
+      
+      // Add steps
+      session.steps.forEach(step => {
+        thinkingMd += `### Step ${step.id}: ${step.title}\n`;
+        thinkingMd += `${step.content}\n\n`;
+      });
+      
+      // Add conclusion
+      thinkingMd += `### Conclusion\n`;
+      thinkingMd += `${session.conclusion}\n`;
+      
+      // Write back to file
+      fs.writeFileSync(activeContextPath, content + thinkingMd, 'utf8');
+      
+      return true;
+    } catch (error) {
+      console.error(`Error appending to active context: ${error.message}`);
+      return false;
+    }
+  }
+
+  /**
+   * Get thinking history for a specific problem or all history
+   * @param {string} problemSearch - Optional problem text to search for
+   * @returns {Array} Matching thinking sessions
+   */
+  getHistory(problemSearch) {
+    if (!problemSearch) {
+      return this.history;
+    }
+    
+    return this.history.filter(session => 
+      session.problem.toLowerCase().includes(problemSearch.toLowerCase())
+    );
+  }
+
+  /**
+   * Create a new sequential thinking configuration
+   * @param {Object} config - Configuration options
+   * @returns {boolean} Success of the operation
+   */
+  updateConfig(config) {
+    this.config = {
+      ...this.config,
+      ...config
+    };
+    
+    return this.saveConfig();
+  }
+}
+
+module.exports = SequentialThinkingAPI;
+EOL
+
+  log "INFO" "Sequential Thinking API erstellt."
+  
+  # CLI Tool für Memory Bank APIs erstellen
+  cat > "$MEMORY_BANK_DIR/apis/cli.js" << 'EOL'
+#!/usr/bin/env node
+
+/**
+ * Memory Bank CLI
+ * 
+ * A command-line tool for managing and interacting with the CLAUDE AGI Memory Bank.
+ * 
+ * Usage:
+ *   node cli.js <command> [options]
+ * 
+ * Commands:
+ *   update              Update memory bank files and knowledge graph
+ *   extract-knowledge   Extract knowledge from memory bank into knowledge graph
+ *   think               Apply sequential thinking to a problem
+ *   visualize-graph     Generate visualization of the knowledge graph
+ */
+
+const fs = require('fs');
+const path = require('path');
+const KnowledgeGraphAPI = require('./knowledgeGraphAPI');
+const SequentialThinkingAPI = require('./sequentialThinkingAPI');
+
+// Parse command line arguments
+const args = process.argv.slice(2);
+const command = args[0];
+const options = args.slice(1);
+
+// Get current date/time formatted
+function getFormattedDateTime() {
+  const now = new Date();
+  return now.toISOString().replace(/T/, ' ').replace(/\..+/, '');
+}
+
+// Handle update command
+async function handleUpdate(projectPath) {
+  try {
+    console.log(`Updating memory bank for: ${projectPath}`);
+    console.log(`[${getFormattedDateTime()}] Starting update...`);
+    
+    // Check if project path exists
+    if (!fs.existsSync(projectPath)) {
+      console.error(`Error: Project path ${projectPath} does not exist.`);
+      process.exit(1);
+    }
+    
+    // Memory bank path
+    const memoryBankPath = path.join(projectPath, 'memory-bank');
+    if (!fs.existsSync(memoryBankPath)) {
+      console.error(`Error: Memory bank not found at ${memoryBankPath}`);
+      process.exit(1);
+    }
+    
+    // Update active context timestamp
+    const activeContextPath = path.join(memoryBankPath, 'activeContext.md');
+    if (fs.existsSync(activeContextPath)) {
+      let content = fs.readFileSync(activeContextPath, 'utf8');
+      const lastUpdatedSection = `\n\n## Last Updated\n\n${getFormattedDateTime()}\n`;
+      
+      // Check if Last Updated section exists
+      if (content.includes('## Last Updated')) {
+        // Replace existing section
+        content = content.replace(/## Last Updated[\s\S]*?(?=\n## |$)/, lastUpdatedSection);
+      } else {
+        // Add new section
+        content += lastUpdatedSection;
+      }
+      
+      fs.writeFileSync(activeContextPath, content);
+      console.log(`Updated activeContext.md with timestamp`);
+    }
+    
+    // Update knowledge graph
+    const knowledgeGraph = new KnowledgeGraphAPI(projectPath);
+    const updateSummary = knowledgeGraph.updateFromMemoryBank();
+    
+    console.log(`Knowledge graph update complete:`);
+    console.log(`- Files processed: ${updateSummary.filesProcessed}`);
+    console.log(`- Concepts added: ${updateSummary.conceptsAdded}`);
+    console.log(`- Relationships added: ${updateSummary.relationshipsAdded}`);
+    
+    console.log(`[${getFormattedDateTime()}] Memory bank update completed.`);
+    return true;
+  } catch (error) {
+    console.error(`Error updating memory bank: ${error.message}`);
+    return false;
+  }
+}
+
+// Handle extract-knowledge command
+async function handleExtractKnowledge(projectPath) {
+  try {
+    console.log(`Extracting knowledge from: ${projectPath}`);
+    console.log(`[${getFormattedDateTime()}] Starting knowledge extraction...`);
+    
+    // Check if project path exists
+    if (!fs.existsSync(projectPath)) {
+      console.error(`Error: Project path ${projectPath} does not exist.`);
+      process.exit(1);
+    }
+    
+    // Initialize knowledge graph
+    const knowledgeGraph = new KnowledgeGraphAPI(projectPath);
+    
+    // Process all markdown files in project
+    const processDirectory = (dirPath, depth = 0) => {
+      if (depth > 3) return; // Limit recursion depth
+      
+      const files = fs.readdirSync(dirPath);
+      let totalConcepts = 0;
+      
+      for (const file of files) {
+        const filePath = path.join(dirPath, file);
+        const stat = fs.statSync(filePath);
+        
+        if (stat.isDirectory() && !file.startsWith('.') && file !== 'node_modules') {
+          processDirectory(filePath, depth + 1);
+        } else if (file.endsWith('.md')) {
+          try {
+            const content = fs.readFileSync(filePath, 'utf8');
+            const fileType = path.basename(file, '.md');
+            const conceptType = fileType.includes('tech') ? 'technology' : 
+                              fileType.includes('system') ? 'pattern' :
+                              fileType.includes('product') ? 'feature' : 'concept';
+            
+            const extractedConcepts = knowledgeGraph.extractConceptsFromText(content, conceptType);
+            totalConcepts += extractedConcepts.length;
+            
+            console.log(`Processed ${file}: found ${extractedConcepts.length} concepts`);
+          } catch (err) {
+            console.error(`Error processing ${filePath}: ${err.message}`);
+          }
+        }
+      }
+      
+      return totalConcepts;
+    };
+    
+    const totalExtracted = processDirectory(projectPath);
+    console.log(`Total concepts extracted: ${totalExtracted}`);
+    
+    console.log(`[${getFormattedDateTime()}] Knowledge extraction completed.`);
+    return true;
+  } catch (error) {
+    console.error(`Error extracting knowledge: ${error.message}`);
+    return false;
+  }
+}
+
+// Handle think command
+async function handleThink(problem, modelType = 'problem-solving') {
+  try {
+    console.log(`Applying sequential thinking to problem: "${problem}"`);
+    console.log(`Using thinking model: ${modelType}`);
+    console.log(`[${getFormattedDateTime()}] Starting thinking process...`);
+    
+    // Get current directory as default project path
+    const projectPath = process.cwd();
+    
+    // Initialize sequential thinking
+    const thinking = new SequentialThinkingAPI(projectPath);
+    
+    // Apply thinking
+    const session = await thinking.think(problem, { 
+      model: modelType,
+      appendToActiveContext: true
+    });
+    
+    console.log('\n=== Thinking Process ===\n');
+    
+    // Print steps
+    for (const step of session.steps) {
+      console.log(`\n### Step ${step.id}: ${step.title}`);
+      console.log(step.content);
+    }
+    
+    // Print conclusion
+    console.log('\n### Conclusion');
+    console.log(session.conclusion);
+    
+    console.log(`\n[${getFormattedDateTime()}] Thinking process completed.`);
+    return true;
+  } catch (error) {
+    console.error(`Error in sequential thinking: ${error.message}`);
+    return false;
+  }
+}
+
+// Handle visualize-graph command
+async function handleVisualizeGraph(projectPath, format = 'html', output = 'knowledge-graph') {
+  try {
+    console.log(`Visualizing knowledge graph for: ${projectPath}`);
+    console.log(`Format: ${format}, Output: ${output}`);
+    console.log(`[${getFormattedDateTime()}] Starting visualization...`);
+    
+    // Check if project path exists
+    if (!fs.existsSync(projectPath)) {
+      console.error(`Error: Project path ${projectPath} does not exist.`);
+      process.exit(1);
+    }
+    
+    // Initialize knowledge graph
+    const knowledgeGraph = new KnowledgeGraphAPI(projectPath);
+    
+    // Generate visualization
+    const visualization = knowledgeGraph.visualize(format);
+    
+    // Add file extension based on format
+    let fileName = output;
+    if (format === 'html' && !fileName.endsWith('.html')) {
+      fileName += '.html';
+    } else if (format === 'json' && !fileName.endsWith('.json')) {
+      fileName += '.json';
+    } else if (format === 'graphviz' && !fileName.endsWith('.dot')) {
+      fileName += '.dot';
+    }
+    
+    // Write to file
+    fs.writeFileSync(fileName, visualization);
+    
+    console.log(`Visualization saved to: ${fileName}`);
+    console.log(`[${getFormattedDateTime()}] Visualization completed.`);
+    return true;
+  } catch (error) {
+    console.error(`Error visualizing knowledge graph: ${error.message}`);
+    return false;
+  }
+}
+
+// Main function
+async function main() {
+  try {
+    switch (command) {
+      case 'update':
+        if (options.length === 0) {
+          console.error('Error: Project path is required for update command.');
+          process.exit(1);
+        }
+        await handleUpdate(options[0]);
+        break;
+      
+      case 'extract-knowledge':
+        if (options.length === 0) {
+          console.error('Error: Project path is required for extract-knowledge command.');
+          process.exit(1);
+        }
+        await handleExtractKnowledge(options[0]);
+        break;
+      
+      case 'think':
+        if (options.length === 0) {
+          console.error('Error: Problem statement is required for think command.');
+          process.exit(1);
+        }
+        const problem = options[0];
+        const model = options[1] || 'problem-solving';
+        await handleThink(problem, model);
+        break;
+      
+      case 'visualize-graph':
+        if (options.length === 0) {
+          console.error('Error: Project path is required for visualize-graph command.');
+          process.exit(1);
+        }
+        const projectPath = options[0];
+        
+        // Parse format option (--format=html)
+        let format = 'html';
+        const formatOption = options.find(opt => opt.startsWith('--format='));
+        if (formatOption) {
+          format = formatOption.split('=')[1];
+        }
+        
+        // Parse output option (--output=filename)
+        let output = 'knowledge-graph';
+        const outputOption = options.find(opt => opt.startsWith('--output='));
+        if (outputOption) {
+          output = outputOption.split('=')[1];
+        }
+        
+        await handleVisualizeGraph(projectPath, format, output);
+        break;
+      
+      case '--help':
+      case '-h':
+      case 'help':
+        showHelp();
+        break;
+      
+      default:
+        console.error(`Unknown command: ${command}`);
+        showHelp();
+        process.exit(1);
+    }
+  } catch (error) {
+    console.error(`Error: ${error.message}`);
+    process.exit(1);
+  }
+}
+
+// Show help message
+function showHelp() {
+  console.log(`
+Memory Bank CLI - v2.0.0
+
+Usage:
+  node cli.js <command> [options]
+
+Commands:
+  update <project-path>              Update memory bank files and knowledge graph
+  extract-knowledge <project-path>   Extract knowledge from memory bank into knowledge graph
+  think <problem> [model-type]       Apply sequential thinking to a problem
+  visualize-graph <project-path>     Generate visualization of the knowledge graph
+                   [--format=html|json|graphviz] 
+                   [--output=filename]
+  help                               Show this help message
+
+Examples:
+  node cli.js update /path/to/project
+  node cli.js extract-knowledge /path/to/project
+  node cli.js think "How to improve app performance?" code-design
+  node cli.js visualize-graph /path/to/project --format=html --output=graph.html
+  `);
+}
+
+// Execute main function
+main();
+EOL
+
+  # Mache CLI-Skript ausführbar
+  chmod +x "$MEMORY_BANK_DIR/apis/cli.js"
+  
+  # Erstelle index.js zum Exportieren aller APIs
+  cat > "$MEMORY_BANK_DIR/apis/index.js" << 'EOL'
+/**
+ * Memory Bank API
+ * 
+ * Unified interface for the CLAUDE AGI Memory Bank System.
+ * 
+ * Version: 2.0.0
+ */
+
+const fs = require('fs');
+const path = require('path');
+const KnowledgeGraphAPI = require('./knowledgeGraphAPI');
+const SequentialThinkingAPI = require('./sequentialThinkingAPI');
+
+/**
+ * Initialize a memory bank for a project
+ * @param {string} projectPath - Path to the project
+ * @param {boolean} useTemplates - Whether to copy templates if not exists
+ */
+function initMemoryBank(projectPath, useTemplates = true) {
+  // Check if project exists
+  if (!fs.existsSync(projectPath)) {
+    throw new Error(`Project path does not exist: ${projectPath}`);
+  }
+  
+  // Create memory-bank directory if it doesn't exist
+  const memoryBankPath = path.join(projectPath, 'memory-bank');
+  if (!fs.existsSync(memoryBankPath)) {
+    fs.mkdirSync(memoryBankPath, { recursive: true });
+    console.log(`Created memory-bank directory at ${memoryBankPath}`);
+  }
+  
+  // Use templates if requested
+  if (useTemplates) {
+    const templateBaseDir = path.resolve(__dirname, '..', 'templates');
+    if (fs.existsSync(templateBaseDir)) {
+      const files = fs.readdirSync(templateBaseDir);
+      
+      for (const file of files) {
+        const sourcePath = path.join(templateBaseDir, file);
+        const targetPath = path.join(memoryBankPath, file);
+        
+        // Skip if file already exists
+        if (fs.existsSync(targetPath)) {
+          continue;
+        }
+        
+        // Copy template file
+        fs.copyFileSync(sourcePath, targetPath);
+        console.log(`Copied template: ${file}`);
+      }
+    } else {
+      console.warn(`Templates directory not found: ${templateBaseDir}`);
+    }
+  }
+  
+  // Initialize Knowledge Graph API
+  const knowledgeGraph = new KnowledgeGraphAPI(projectPath);
+  const sequentialThinking = new SequentialThinkingAPI(projectPath);
+  
+  return {
+    knowledgeGraph,
+    sequentialThinking,
+    projectPath,
+    memoryBankPath
+  };
+}
+
+/**
+ * Create a new memory bank from scratch
+ * @param {string} projectPath - Path to the project
+ * @param {string} projectName - Name of the project
+ */
+function createMemoryBank(projectPath, projectName) {
+  // Ensure project directory exists
+  if (!fs.existsSync(projectPath)) {
+    fs.mkdirSync(projectPath, { recursive: true });
+  }
+  
+  // Initialize memory bank
+  const memoryBank = initMemoryBank(projectPath);
+  
+  // Update projectbrief.md with project name
+  const projectBriefPath = path.join(memoryBank.memoryBankPath, 'projectbrief.md');
+  if (fs.existsSync(projectBriefPath)) {
+    let content = fs.readFileSync(projectBriefPath, 'utf8');
+    content = content.replace(/# \[Projektname\]/, `# ${projectName}`);
+    fs.writeFileSync(projectBriefPath, content);
+  }
+  
+  return memoryBank;
+}
+
+// Export module
+module.exports = {
+  KnowledgeGraphAPI,
+  SequentialThinkingAPI,
+  initMemoryBank,
+  createMemoryBank
+};
+EOL
+
+  log "INFO" "Memory Bank CLI und Index erstellt."
 
   log "SUCCESS" "Memory-Bank-Struktur erstellt."
 }
@@ -818,7 +2140,7 @@ create_readme() {
   cat > "$CLAUDE_DIR/README.md" << EOL
 # CLAUDE-AGI Terminal System
 
-Ein integriertes System für die Claude AI mit Terminal-Integration, Memory Bank und ProxyClaude Service.
+Ein integriertes System für die Claude AI mit Terminal-Integration, Memory Bank v2.0 und ProxyClaude Service.
 
 ![CLAUDE-AGI Terminal](https://raw.githubusercontent.com/anthropics/claude-terminal/main/docs/terminal-preview.png)
 
@@ -835,15 +2157,21 @@ Eine Terminal-basierte Benutzeroberfläche für die Interaktion mit Claude AI.
 Projektorganisation mit folgender Struktur:
 - \`claude-agi-projects/\`: Hauptverzeichnis für alle Projekte
 - \`default-project/\`: Standard-Arbeitsumgebung
-- \`memory-bank/\`: Kontext-Verwaltungssystem
+- \`memory-bank/\`: Kontext-Verwaltungssystem mit Knowledge Graph und Sequential Thinking
 
-### 3. ProxyClaude Service
+### 3. Memory Bank v2.0
+Fortschrittliches Kontext-Management-System mit neuen APIs:
+- **Knowledge Graph API**: Semantische Beziehungen zwischen Konzepten im Projekt
+- **Sequential Thinking API**: Strukturierte Problemlösung mit MCP-Integration
+- **Memory Bank CLI**: Kommandozeilen-Tool für Verwaltung und Visualisierung
+
+### 4. ProxyClaude Service
 API-Proxy für Claude mit folgenden Features:
 - JWT-Authentifizierung
 - Nutzer-basierte Ratenbegrenzung
 - Zentrale API-Schlüsselverwaltung
 
-### 4. MCP-Tools Integration
+### 5. MCP-Tools Integration
 Model Context Protocol Tools für erweiterte Funktionalität:
 - Memory Bank MCP
 - Desktop Commander
@@ -880,6 +2208,20 @@ npm start
 \`\`\`bash
 mkdir -p claude-agi-projects/mein-projekt/memory-bank
 cp -r memory-bank/templates/* claude-agi-projects/mein-projekt/memory-bank/
+\`\`\`
+
+### Memory Bank v2.0 APIs nutzen
+
+\`\`\`bash
+# Memory Bank aktualisieren und Knowledge Graph erzeugen
+cd memory-bank
+node apis/cli.js update /pfad/zum/projekt
+
+# Sequential Thinking für ein Problem anwenden
+node apis/cli.js think "Wie kann ich die App-Performance verbessern?" code-design
+
+# Knowledge Graph visualisieren
+node apis/cli.js visualize-graph /pfad/zum/projekt --format=html
 \`\`\`
 
 ## Mitwirkung
@@ -935,9 +2277,9 @@ main() {
 
 Diese Datei bietet Anweisungen für Claude Code (claude.ai/code) bei der Arbeit mit diesem Repository.
 
-## CLAUDE AGI-Terminal-System v1.1
+## CLAUDE AGI-Terminal-System v1.2
 
-Das CLAUDE AGI-Terminal-System nutzt eine standardisierte Projektstruktur mit Profilfunktionen, Memory-Bank und MCP-Tools-Integration.
+Das CLAUDE AGI-Terminal-System nutzt eine standardisierte Projektstruktur mit Profilfunktionen, Memory-Bank v2.0 und MCP-Tools-Integration.
 
 ## Standardisierte Projektstruktur
 \`\`\`
@@ -947,7 +2289,9 @@ $CLAUDE_DIR/
 │   ├── .project-config.json  # Konfiguration für Projekte
 │   └── default-project/      # Standard-Arbeitsverzeichnis
 │       └── memory-bank/      # Projekt-spezifische Memory Bank
-├── memory-bank/              # Globale Memory Bank Templates
+├── memory-bank/              # Memory Bank v2.0 System
+│   ├── templates/            # Vorlagen für neue Projekte
+│   └── apis/                 # Knowledge Graph und Sequential Thinking APIs
 ├── .claude-agi/              # Service-Komponenten
 │   └── services/
 │       └── proxyclaude/      # Claude API Proxy Service
@@ -962,21 +2306,84 @@ $CLAUDE_DIR/
 - Entwicklung: \`cd claude-terminal && npm run dev\` oder \`cd .claude-agi/services/proxyclaude && npm run dev\`
 - Build: \`cd claude-terminal && npm run build\` oder \`cd .claude-agi/services/proxyclaude && npm run build\`
 - Tests: \`cd .claude-agi/services/proxyclaude && npm test\`
+- Memory Bank CLI: \`cd memory-bank && node apis/cli.js <command> [options]\`
+
+## Memory Bank v2.0 APIs
+
+### Knowledge Graph API
+Die Knowledge Graph API ermöglicht das Verwalten und Abfragen semantischer Beziehungen im Projekt:
+
+\`\`\`javascript
+const KnowledgeGraphAPI = require('./memory-bank/apis/knowledgeGraphAPI');
+const kg = new KnowledgeGraphAPI('/path/to/project');
+
+// Konzepte hinzufügen und verbinden
+const nodeId = kg.addConcept('Authentication', 'feature');
+const relId = kg.addRelationship(sourceId, targetId, 'depends_on');
+
+// Graph abfragen
+const concepts = kg.queryConcepts({ type: 'technology' });
+const path = kg.findShortestPath(conceptA, conceptB);
+
+// Automatische Extraktion
+const summary = kg.updateFromMemoryBank();
+
+// Visualisierung
+const html = kg.visualize('html');
+\`\`\`
+
+### Sequential Thinking API
+Die Sequential Thinking API bietet strukturierte Problemlösungsmodelle mit MCP-Integration:
+
+\`\`\`javascript
+const SequentialThinkingAPI = require('./memory-bank/apis/sequentialThinkingAPI');
+const st = new SequentialThinkingAPI('/path/to/project');
+
+// Problem lösen
+const session = await st.think('Wie optimiere ich die Performance?', {
+  model: 'code-design',
+  appendToActiveContext: true
+});
+
+// Ergebnisse betrachten
+console.log(session.steps);
+console.log(session.conclusion);
+
+// Historie abfragen
+const previousSessions = st.getHistory('performance');
+\`\`\`
+
+### CLI-Tool
+Das Memory Bank CLI-Tool ermöglicht die Verwaltung und Visualisierung über die Kommandozeile:
+
+\`\`\`bash
+# Knowledge Graph aktualisieren
+node apis/cli.js update /path/to/project
+
+# Konzepte aus Projektdateien extrahieren
+node apis/cli.js extract-knowledge /path/to/project
+
+# Strukturiertes Problemlösen
+node apis/cli.js think "Wie kann ich die API-Performance verbessern?" code-design
+
+# Knowledge Graph visualisieren
+node apis/cli.js visualize-graph /path/to/project --format=html --output=graph.html
+\`\`\`
 
 ## MCP-Tools
 Das System nutzt folgende MCP-Tools:
-- memory-bank-mcp: Persistente Kontext-Verwaltung 
+- memory-bank-mcp: Persistente Kontext-Verwaltung mit Knowledge Graph Integration
 - desktop-commander: Dateisystem und Shell-Operationen
 - browser-tools: Web-Recherche und Browser-Integration
 - proxyclaude: Claude API Proxy für zentrale Nutzung
 - code-mcp: Code-Generierung und Analyse
-- sequentialthinking: Strukturierte Problemlösung
+- sequentialthinking: Strukturierte Problemlösung und Integration mit Memory Bank
 
 ## Wichtige Regeln
 1. Alle AGI-Projekte werden in claude-agi-projects/ verwaltet
 2. Terminal arbeitet automatisch im Standard-Projektverzeichnis
 3. Private Projekte (goldankauf, aclearallb.gg, etc.) werden NICHT im Git eingecheckt
-4. Memory-Bank wird pro Projekt strukturiert
+4. Memory-Bank v2.0 bietet erweiterte APIs für Knowledge Graph und Sequential Thinking
 5. ProxyClaude nutzt JWT für die Authentifizierung
 6. API-Schlüssel werden IMMER in .env-Dateien gespeichert (nicht ins Git)
 
@@ -989,18 +2396,19 @@ EOL
 
   # Erfolgreicher Abschluss
   echo ""
-  echo -e "${GREEN}✅ Claude-AGI v1.1 mit standardisierter Projektstruktur installiert!${NC}"
+  echo -e "${GREEN}✅ Claude-AGI v1.2 mit Memory Bank v2.0 und standardisierter Projektstruktur installiert!${NC}"
   echo ""
   echo -e "${BLUE}Standardisierte Struktur:${NC}"
   echo "- Projektverzeichnis: $AGI_PROJECTS_DIR"
   echo "- Standard-Arbeitsverzeichnis: $DEFAULT_PROJECT_DIR"
-  echo "- Memory-Bank-System: Strukturiert nach Projekten"
+  echo "- Memory-Bank-System v2.0: Strukturiert nach Projekten mit erweiterten APIs"
   echo "- ProxyClaude Service: $CLAUDE_DIR/.claude-agi/services/proxyclaude"
   echo ""
   echo -e "${BLUE}Integrierte Komponenten:${NC}"
   echo "- Claude Terminal: Konsolenbasierte AI-Integration"
   echo "- ProxyClaude: API-Proxy mit JWT-Authentifizierung"
-  echo "- Memory-Bank: Persistenter Kontext für Projekte"
+  echo "- Memory-Bank v2.0: Persistenter Kontext mit Knowledge Graph und Sequential Thinking APIs"
+  echo "- Memory-Bank CLI: Kommandozeilen-Tool für Verwaltung und Visualisierung"
   echo "- MCP-Tools: Erweiterte KI-Funktionen über MCP-Protokoll"
   echo ""
   echo -e "${YELLOW}Nächste Schritte:${NC}"
@@ -1008,6 +2416,12 @@ EOL
   echo "2. ProxyClaude konfigurieren: cp $PROXYCLAUDE_DIR/.env.example $PROXYCLAUDE_DIR/.env"
   echo "3. API-Schlüssel einrichten: nano $PROXYCLAUDE_DIR/.env"
   echo "4. ProxyClaude starten: cd $PROXYCLAUDE_DIR && npm start"
+  echo "5. Memory Bank CLI testen: cd $MEMORY_BANK_DIR && node apis/cli.js think \"Wie kann ich ein neues Feature planen?\""
+  echo ""
+  echo -e "${YELLOW}Memory Bank v2.0 APIs nutzen:${NC}"
+  echo "- Knowledge Graph aktualisieren: cd $MEMORY_BANK_DIR && node apis/cli.js update $DEFAULT_PROJECT_DIR"
+  echo "- Konzepte extrahieren: node apis/cli.js extract-knowledge $DEFAULT_PROJECT_DIR"
+  echo "- Knowledge Graph visualisieren: node apis/cli.js visualize-graph $DEFAULT_PROJECT_DIR --format=html"
   echo ""
   echo -e "${YELLOW}Sicherheitshinweise:${NC}"
   echo "- Sensible Projekte werden automatisch ausgeschlossen"

@@ -68,3 +68,6 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - ProxyClaude Guide: `/docs/proxyclaude-guide.md`
 - MCP Tools Reference: `/docs/mcp-tools-reference.md`
 - Vibe Coding Stack: `/docs/vibe-coding-stack.md`
+
+## File Management
+- Always remove outdated/useless files immediately when restructuring, cleaning or analyzing code

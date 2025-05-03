@@ -55,3 +55,9 @@ build/
 **/secrets/**
 **apikey**
 **api-key**
+# Additional sensitive business projects (NEVER commit)
+**/aclearallb*/**
+**/goldankauf*/**
+**/deepleeping/**
+**/deepleeping.eu/**
+**/goldankaufneunkrichen/**
