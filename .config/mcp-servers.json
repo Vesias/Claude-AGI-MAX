@@ -1,0 +1,43 @@
+{
+  "mcpServers": {
+    "memory-server": {
+      "command": "npx",
+      "args": ["@modelcontextprotocol/server-memory", "start"],
+      "env": {
+        "MEMORY_STORAGE_PATH": "/home/jan/.claude/memory_storage",
+        "LOG_LEVEL": "info"
+      }
+    },
+    "sequentialthinking": {
+      "command": "npx",
+      "args": ["@modelcontextprotocol/server-sequential-thinking", "start"],
+      "env": {
+        "LOG_LEVEL": "info"
+      }
+    },
+    "code-context": {
+      "command": "npx",
+      "args": ["@modelcontextprotocol/server-code-context", "start"],
+      "env": {
+        "PROJECT_ROOT": "${workspaceFolder}",
+        "LOG_LEVEL": "info"
+      }
+    },
+    "brave-search": {
+      "command": "npx",
+      "args": ["@modelcontextprotocol/server-brave-search", "start"],
+      "env": {
+        "BRAVE_API_KEY": "${BRAVE_API_KEY}",
+        "LOG_LEVEL": "info"
+      }
+    },
+    "desktop-commander": {
+      "command": "npx",
+      "args": ["@modelcontextprotocol/server-desktop-commander", "start"],
+      "env": {
+        "ALLOWED_DIRS": "/home/jan/projects,/home/jan/Schreibtisch",
+        "LOG_LEVEL": "info"
+      }
+    }
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "token": "9cffc666a1db0f12eb7fbc6d0529fe19",
+  "url": "http://localhost:4001/payment/checkout?invite=9cffc666a1db0f12eb7fbc6d0529fe19",
+  "discountCode": "EARLY5",
+  "created": "2025-05-03T02:09:51.051Z",
+  "used": false
+}

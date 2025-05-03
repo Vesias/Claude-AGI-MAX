@@ -1,0 +1,166 @@
+{
+  "entities": [
+    {
+      "id": "entity_001",
+      "type": "project",
+      "name": "CLAUDE",
+      "description": "Memory-Bank-System für Claude mit MCP-Integration",
+      "attributes": {
+        "priority": "high",
+        "status": "active",
+        "startDate": "2025-05-02"
+      },
+      "created": "2025-05-02T12:00:00Z",
+      "lastModified": "2025-05-02T12:00:00Z"
+    },
+    {
+      "id": "entity_002",
+      "type": "component",
+      "name": "Memory-Bank Core",
+      "description": "Kernkomponenten der Memory-Bank (Markdown-Dateien)",
+      "attributes": {
+        "status": "implemented",
+        "priority": "high"
+      },
+      "created": "2025-05-02T12:05:00Z",
+      "lastModified": "2025-05-02T12:05:00Z"
+    },
+    {
+      "id": "entity_003",
+      "type": "component",
+      "name": "MCP Integration",
+      "description": "Integration mit Model Context Protocol",
+      "attributes": {
+        "status": "in_progress",
+        "priority": "high"
+      },
+      "created": "2025-05-02T12:10:00Z",
+      "lastModified": "2025-05-02T12:10:00Z"
+    },
+    {
+      "id": "entity_004",
+      "type": "feature",
+      "name": "Persistente Speicherung",
+      "description": "Speicherung von Informationen über Sitzungen hinweg",
+      "attributes": {
+        "status": "in_progress",
+        "priority": "high"
+      },
+      "created": "2025-05-02T12:15:00Z",
+      "lastModified": "2025-05-02T12:15:00Z"
+    },
+    {
+      "id": "entity_005",
+      "type": "feature",
+      "name": "Sequential Thinking",
+      "description": "Strukturierte Problemlösung mit sequenziellem Denken",
+      "attributes": {
+        "status": "planned",
+        "priority": "medium"
+      },
+      "created": "2025-05-02T12:20:00Z",
+      "lastModified": "2025-05-02T12:20:00Z"
+    },
+    {
+      "id": "entity_006",
+      "type": "actor",
+      "name": "Jan",
+      "description": "Technischer Entwickler mit Fokus auf Web, Blockchain und E-Commerce",
+      "attributes": {
+        "role": "developer",
+        "preference": "technical_details"
+      },
+      "created": "2025-05-02T12:25:00Z",
+      "lastModified": "2025-05-02T12:25:00Z"
+    },
+    {
+      "id": "entity_007",
+      "type": "actor",
+      "name": "Serhan",
+      "description": "Business-orientierter Projektmanager",
+      "attributes": {
+        "role": "business",
+        "preference": "roi_focus"
+      },
+      "created": "2025-05-02T12:30:00Z",
+      "lastModified": "2025-05-02T12:30:00Z"
+    }
+  ],
+  "relationships": [
+    {
+      "id": "rel_001",
+      "type": "part_of",
+      "source": "entity_002",
+      "target": "entity_001",
+      "attributes": {
+        "strength": "strong",
+        "bidirectional": false
+      },
+      "created": "2025-05-02T12:35:00Z"
+    },
+    {
+      "id": "rel_002",
+      "type": "part_of",
+      "source": "entity_003",
+      "target": "entity_001",
+      "attributes": {
+        "strength": "strong",
+        "bidirectional": false
+      },
+      "created": "2025-05-02T12:36:00Z"
+    },
+    {
+      "id": "rel_003",
+      "type": "associated_with",
+      "source": "entity_004",
+      "target": "entity_003",
+      "attributes": {
+        "strength": "strong",
+        "bidirectional": true
+      },
+      "created": "2025-05-02T12:37:00Z"
+    },
+    {
+      "id": "rel_004",
+      "type": "associated_with",
+      "source": "entity_005",
+      "target": "entity_003",
+      "attributes": {
+        "strength": "medium",
+        "bidirectional": true
+      },
+      "created": "2025-05-02T12:38:00Z"
+    },
+    {
+      "id": "rel_005",
+      "type": "depends_on",
+      "source": "entity_001",
+      "target": "entity_006",
+      "attributes": {
+        "strength": "strong",
+        "bidirectional": false
+      },
+      "created": "2025-05-02T12:39:00Z"
+    },
+    {
+      "id": "rel_006",
+      "type": "depends_on",
+      "source": "entity_001",
+      "target": "entity_007",
+      "attributes": {
+        "strength": "medium",
+        "bidirectional": false
+      },
+      "created": "2025-05-02T12:40:00Z"
+    }
+  ],
+  "metadata": {
+    "version": "1.0",
+    "lastUpdated": "2025-05-02T12:45:00Z",
+    "description": "Wissensgraph für CLAUDE Memory-Bank-System"
+  },
+  "settings": {
+    "entityTypes": ["concept", "feature", "component", "task", "actor"],
+    "relationshipTypes": ["depends_on", "part_of", "associated_with", "causes", "influences"]
+  }
+}

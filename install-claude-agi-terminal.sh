@@ -92,25 +92,26 @@ check_prerequisites() {
     exit 1
   fi
   
+  # Node.js-Version prüfen - mindestens v16, empfehle v18+
+  NODE_VERSION=$(node -v | cut -d'v' -f2 | cut -d'.' -f1)
+  if [ "$NODE_VERSION" -lt 16 ]; then
+    log "ERROR" "Node.js v$NODE_VERSION ist zu alt. Mindestens Node.js v16 wird benötigt, v18+ empfohlen."
+    echo -e "${BLUE}Bitte aktualisieren Sie Node.js:${NC} https://nodejs.org/de/download/"
+    exit 1
+  fi
+  
   # NVM prüfen
   if command -v nvm &> /dev/null; then
-    log "INFO" "NVM ist installiert. Überprüfe kompatible Node.js Version..."
+    log "INFO" "NVM ist installiert. Aktuelle Node.js-Version: $(node -v)"
     
-    # Node.js-Version prüfen und ggf. auf kompatible Version umschalten
-    NODE_VERSION=$(node -v | cut -d'v' -f2 | cut -d'.' -f1)
-    if [ "$NODE_VERSION" -gt 18 ]; then
-      log "WARNING" "Node.js v$NODE_VERSION gefunden, aber für die Kompatibilität mit node-pty wird v16 empfohlen."
-      if prompt_yes_no "Möchten Sie temporär zu Node.js v16 für diese Installation wechseln?" "y"; then
-        log "INFO" "Wechsle zu Node.js v16..."
-        nvm install 16
-        nvm use 16
-        export PATH="$HOME/.nvm/versions/node/v16/bin:$PATH"
-        log "INFO" "Jetzt wird Node.js $(node -v) verwendet."
-      fi
+    # Für node-pty Kompatibilität auf LTS-Versionen hinweisen
+    if [ "$NODE_VERSION" -lt 18 ] || [ "$NODE_VERSION" -gt 20 ]; then
+      log "WARNING" "Node.js v$NODE_VERSION erkannt. Für optimale Kompatibilität werden LTS-Versionen (v18 oder v20) empfohlen."
+    else
+      log "INFO" "Node.js v$NODE_VERSION (LTS) erkannt - optimale Kompatibilität."
     fi
   else
-    log "WARNING" "NVM (Node Version Manager) ist nicht installiert. Dies könnte Kompatibilitätsprobleme verursachen."
-    log "INFO" "Fahre mit aktueller Node.js-Version $(node -v) fort."
+    log "INFO" "NVM nicht erkannt. Aktuelle Node.js-Version: $(node -v)"
   fi
   
   # NPM
@@ -132,9 +133,19 @@ check_prerequisites() {
     
     if prompt_yes_no "Möchten Sie Electron global installieren?" "y"; then
       log "INFO" "Installiere Electron global..."
-      npm install -g electron@22 # Verwende eine ältere, stabilere Version
+      # Neuere Version verwenden (Electron 28+ ist mit Node.js 18+ kompatibel)
+      npm install -g electron@latest
     else
       log "WARNING" "Electron-Installation übersprungen. Die Terminal-App benötigt Electron."
+    fi
+  else
+    ELECTRON_VERSION=$(electron -v | cut -d'v' -f2 | cut -d'.' -f1)
+    if [ "$ELECTRON_VERSION" -lt 24 ]; then
+      log "WARNING" "Electron v$ELECTRON_VERSION ist älter. Für optimale Kompatibilität mit modernem Node.js wird v24+ empfohlen."
+      if prompt_yes_no "Möchten Sie Electron aktualisieren?" "y"; then
+        log "INFO" "Aktualisiere Electron..."
+        npm install -g electron@latest
+      fi
     fi
   fi
   
@@ -144,9 +155,18 @@ check_prerequisites() {
     
     if prompt_yes_no "Möchten Sie TypeScript global installieren?" "y"; then
       log "INFO" "Installiere TypeScript global..."
-      npm install -g typescript
+      npm install -g typescript@latest
     else
       log "WARNING" "TypeScript-Installation übersprungen. Die Entwicklung erfordert TypeScript."
+    fi
+  else
+    TS_VERSION=$(tsc --version | awk '{print $2}' | cut -d'.' -f1)
+    if [ "$TS_VERSION" -lt 4 ] || [ "$TS_VERSION" -eq 4 ] && [ "$(tsc --version | awk '{print $2}' | cut -d'.' -f2)" -lt 9 ]; then
+      log "WARNING" "TypeScript Version ist zu alt. Für optimale Kompatibilität wird v4.9+ empfohlen."
+      if prompt_yes_no "Möchten Sie TypeScript aktualisieren?" "y"; then
+        log "INFO" "Aktualisiere TypeScript..."
+        npm install -g typescript@latest
+      fi
     fi
   fi
   
@@ -187,6 +207,18 @@ create_mcp_config() {
   cat > "$CONFIG_DIR/claude_desktop_config.json" << EOL
 {
   "mcpServers": {
+    "proxyclaude": {
+      "command": "npx",
+      "args": ["-y", "@proxyclaude/mcp-server@latest"],
+      "env": {
+        "API_ENDPOINT": "http://localhost:4001",
+        "MAX_RETRIES": "3"
+      }
+    },
+    "browser-tools": {
+      "command": "npx",
+      "args": ["-y", "@agentdeskai/browser-tools-mcp@latest"]
+    },
     "desktop-commander": {
       "command": "npx",
       "args": ["-y", "@wonderwhy-er/desktop-commander"]
@@ -201,7 +233,10 @@ create_mcp_config() {
     },
     "memory-bank": {
       "command": "npx",
-      "args": ["-y", "@alioshr/memory-bank-mcp"]
+      "args": ["-y", "@alioshr/memory-bank-mcp"],
+      "env": {
+        "MEMORY_BANK_ROOT": "/home/jan/.claude-agi/memory-bank"
+      }
     },
     "context7-mcp": {
       "command": "npx",
@@ -210,6 +245,14 @@ create_mcp_config() {
     "brave-search": {
       "command": "npx",
       "args": ["-y", "@searchweb/brave-mcp", "--profile", "default"]
+    },
+    "marketing-tools": {
+      "command": "uvx",
+      "args": [
+        "--from",
+        "git+https://github.com/open-strategy-partners/osp_marketing_tools@main",
+        "osp_marketing_tools"
+      ]
     }
   }
 }
@@ -355,15 +398,36 @@ install_terminal() {
   # Wechsle ins Terminal-Verzeichnis
   cd "$TERMINAL_DIR"
   
-  # Modifiziere package.json, um Probleme mit node-pty zu umgehen
-  log "INFO" "Passe package.json an, um Kompatibilitätsprobleme zu beheben..."
+  # Modifiziere package.json für optimale Kompatibilität
+  log "INFO" "Passe package.json für bessere Kompatibilität an..."
   if [ -f "package.json" ]; then
     # Sichern der originalen package.json
     cp package.json package.json.backup
     
-    # Entferne postinstall-Script und node-pty (wird später manuell installiert)
-    sed -i 's/"postinstall": "electron-builder install-app-deps",/"postinstall": "",/g' package.json
-    sed -i 's/"node-pty": "\^1.0.0",/"node-pty": "0.10.1",/g' package.json
+    # Node.js Version bestimmen für optimale Konfiguration
+    NODE_VERSION=$(node -v | cut -d'v' -f2 | cut -d'.' -f1)
+    
+    # Konfiguration basierend auf Node.js Version anpassen
+    if [ "$NODE_VERSION" -ge 18 ]; then
+      # Moderne Node.js-Version (18+)
+      log "INFO" "Optimiere package.json für Node.js v$NODE_VERSION..."
+      
+      # Aktualisiere postinstall-Script und node-pty für moderne Node.js-Versionen
+      sed -i 's/"postinstall": "electron-builder install-app-deps",/"postinstall": "electron-builder install-app-deps || true",/g' package.json
+      # Verwende neueres node-pty
+      sed -i 's/"node-pty": "[^"]*",/"node-pty": "^0.11.0-beta2",/g' package.json
+      
+      log "SUCCESS" "package.json für moderne Node.js v$NODE_VERSION optimiert."
+    else
+      # Ältere Node.js-Version (<18)
+      log "INFO" "Konfiguriere für ältere Node.js v$NODE_VERSION Kompatibilität..."
+      
+      # Bei älteren Versionen ist konservativere Konfiguration nötig
+      sed -i 's/"postinstall": "electron-builder install-app-deps",/"postinstall": "",/g' package.json
+      sed -i 's/"node-pty": "[^"]*",/"node-pty": "0.10.1",/g' package.json
+      
+      log "INFO" "package.json für ältere Node.js v$NODE_VERSION angepasst."
+    fi
     
     log "SUCCESS" "package.json angepasst. Original in package.json.backup gesichert."
   else
@@ -372,20 +436,60 @@ install_terminal() {
   
   # NPM-Abhängigkeiten installieren
   log "INFO" "Installiere NPM-Abhängigkeiten..."
-  npm install --no-optional
+  npm install --no-optional || log "WARNING" "Einige Abhängigkeiten konnten nicht installiert werden. Fortfahren mit Teilinstallation."
   
-  # Versuche node-pty separat zu installieren (mit kompatiblen Versionen)
-  log "INFO" "Versuche node-pty separat zu installieren..."
-  npm install node-pty@0.10.1 --save --no-optional || log "WARNING" "Installation von node-pty fehlgeschlagen. Terminal wird möglicherweise eingeschränkt funktionieren."
+  # node-pty Installation basierend auf Node.js Version
+  log "INFO" "Installiere node-pty basierend auf Node.js-Version..."
+  if [ "$NODE_VERSION" -ge 18 ]; then
+    # Moderne Version für Node.js 18+
+    npm install node-pty@0.11.0-beta2 --save --no-optional || log "WARNING" "Installation von node-pty fehlgeschlagen. Versuche alternative Version..."
+    
+    # Fallback auf ältere Version bei Fehler
+    if [ $? -ne 0 ]; then
+      log "INFO" "Versuche alternative node-pty Version..."
+      npm install node-pty@latest --save --no-optional || log "WARNING" "Installation von node-pty fehlgeschlagen. Terminal wird möglicherweise eingeschränkt funktionieren."
+    fi
+  else
+    # Kompatible Version für ältere Node.js
+    npm install node-pty@0.10.1 --save --no-optional || log "WARNING" "Installation von node-pty fehlgeschlagen. Terminal wird möglicherweise eingeschränkt funktionieren."
+  fi
   
-  # TypeScript-Konfiguration anpassen
-  log "INFO" "Passe TypeScript-Konfiguration an..."
+  # TypeScript-Konfiguration für optimale Kompatibilität anpassen
+  log "INFO" "Optimiere TypeScript-Konfiguration..."
   if [ -f "tsconfig.json" ]; then
     # Sichern der originalen tsconfig.json
     cp tsconfig.json tsconfig.json.backup
     
-    # Konfiguration vereinfachen, um Kompilierungsfehler zu vermeiden
-    cat > "tsconfig.json" << EOF
+    # Bestimme optimale TypeScript-Konfiguration basierend auf Node.js-Version
+    if [ "$NODE_VERSION" -ge 18 ]; then
+      # Moderne Konfiguration für Node.js 18+
+      cat > "tsconfig.json" << EOF
+{
+  "compilerOptions": {
+    "target": "ES2020",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "strict": false,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "outDir": "dist",
+    "rootDir": "src",
+    "baseUrl": ".",
+    "resolveJsonModule": true
+  },
+  "include": [
+    "src/**/*"
+  ],
+  "exclude": [
+    "node_modules",
+    "**/*.spec.ts"
+  ]
+}
+EOF
+    else
+      # Kompatible Konfiguration für ältere Node.js-Versionen
+      cat > "tsconfig.json" << EOF
 {
   "compilerOptions": {
     "target": "ES2018",
@@ -408,11 +512,42 @@ install_terminal() {
   ]
 }
 EOF
-    log "SUCCESS" "TypeScript-Konfiguration angepasst. Original in tsconfig.json.backup gesichert."
+    fi
+    
+    log "SUCCESS" "TypeScript-Konfiguration optimiert. Original in tsconfig.json.backup gesichert."
   else
     log "WARNING" "tsconfig.json nicht gefunden. Erstelle neue Konfiguration..."
-    # Erstelle eine neue Konfiguration
-    cat > "tsconfig.json" << EOF
+    
+    # Erstelle eine neue optimierte Konfiguration
+    if [ "$NODE_VERSION" -ge 18 ]; then
+      # Moderne Konfiguration für Node.js 18+
+      cat > "tsconfig.json" << EOF
+{
+  "compilerOptions": {
+    "target": "ES2020",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "strict": false,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "outDir": "dist",
+    "rootDir": "src",
+    "baseUrl": ".",
+    "resolveJsonModule": true
+  },
+  "include": [
+    "src/**/*"
+  ],
+  "exclude": [
+    "node_modules",
+    "**/*.spec.ts"
+  ]
+}
+EOF
+    else
+      # Kompatible Konfiguration für ältere Node.js-Versionen
+      cat > "tsconfig.json" << EOF
 {
   "compilerOptions": {
     "target": "ES2018",
@@ -435,20 +570,32 @@ EOF
   ]
 }
 EOF
+    fi
   fi
   
-  # TypeScript installieren und kompilieren, aber Fehler ignorieren
-  log "INFO" "Installiere kompatible TypeScript-Version und kompiliere..."
-  npm install typescript@4.9.5 --save-dev
+  # TypeScript installieren basierend auf Node.js-Version
+  log "INFO" "Installiere TypeScript mit optimaler Version..."
+  if [ "$NODE_VERSION" -ge 18 ]; then
+    npm install typescript@latest --save-dev
+  else
+    npm install typescript@4.9.5 --save-dev
+  fi
   
-  # Versuche TypeScript zu kompilieren, aber ignoriere Fehler
+  # TypeScript kompilieren mit verbesserter Fehlerbehandlung
   log "INFO" "Kompiliere TypeScript-Code..."
-  npx tsc || log "WARNING" "TypeScript-Kompilierung fehlgeschlagen. Fortsetzung mit vorhandenen Binärdateien."
-  
-  # Erstelle einen minimalen Build ohne node-pty
-  log "INFO" "Erstelle minimalen Build..."
-  mkdir -p dist
-  cp -r src/* dist/ 2>/dev/null || true
+  if npx tsc; then
+    log "SUCCESS" "TypeScript-Kompilierung erfolgreich."
+  else
+    log "WARNING" "TypeScript-Kompilierung fehlgeschlagen. Versuche erneut mit --skipLibCheck..."
+    if npx tsc --skipLibCheck; then
+      log "SUCCESS" "TypeScript-Kompilierung mit --skipLibCheck erfolgreich."
+    else
+      log "WARNING" "TypeScript-Kompilierung fehlgeschlagen. Erstelle minimalen Build als Fallback."
+      # Erstelle einen minimalen Build als Fallback
+      mkdir -p dist
+      cp -r src/* dist/ 2>/dev/null || true
+    fi
+  fi
   
   # Installiere die App global, falls gewünscht
   if prompt_yes_no "Möchten Sie die Terminal-App global installieren?" "y"; then

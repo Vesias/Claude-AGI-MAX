@@ -1,0 +1,73 @@
+# CLAUDE - Spezifische Richtlinien
+
+## Codierungsstandards
+- Namenskonventionen:
+  - React-Komponenten: PascalCase (ButtonPrimary.tsx)
+  - Funktionen und Variablen: camelCase (getUserData)
+  - Konstanten: UPPER_SNAKE_CASE (API_ENDPOINT)
+  - Typen und Interfaces: PascalCase mit präfix I für Interfaces (IUserData)
+
+- Architekturmuster:
+  - Atomares Design für UI-Komponenten
+  - Repository-Pattern für Datenzugriff
+  - Service-Pattern für Geschäftslogik
+  - Adapter-Pattern für externe API-Integration
+
+- Testing-Anforderungen:
+  - Unit-Tests für alle kritischen Funktionen
+  - Integration-Tests für Komponenten-Interaktionen
+  - E2E-Tests für kritische Pfade
+  - Snapshot-Tests für UI-Komponenten
+
+## Projektspezifische Muster
+- Memory-Bank-Management:
+  - Memory-Bank-Dateien sind immer in Markdown mit frontmatter für Metadaten
+  - Aktualisierungen erfolgen durch explizite Kommandos oder automatisierte Skripte
+  - Versionskontrolle für alle Memory-Bank-Dateien
+  
+- MCP-Server-Integration:
+  - MCP-Server werden über ENV-Variablen konfiguriert
+  - Standardisierte Fehlerbehandlung für MCP-Tool-Aufrufe
+  - Fallback-Mechanismen bei nicht verfügbaren Tools
+  
+- Entwicklungsworkflows:
+  - Memory-Bank-Update nach jeder signifikanten Änderung
+  - Klare Dokumentation aller Entscheidungen und Änderungen
+  - Automatisierte Tests vor jedem Commit
+
+## Kommunikationsprotokoll
+- Status-Report-Format:
+  ```
+  ## Status Update: [Datum]
+  - Fortschritt: [Beschreibung der abgeschlossenen Arbeiten]
+  - Blockaden: [Beschreibung der aktuellen Blockaden oder Probleme]
+  - Nächste Schritte: [Beschreibung der geplanten nächsten Schritte]
+  ```
+
+- Code-Review-Prozess:
+  1. Automatisierte Tests und Linting
+  2. Selbstprüfung anhand Checkliste
+  3. Peer-Review mit Fokus auf Funktionalität und Lesbarkeit
+  4. Final-Review mit Fokus auf Architektur und Performance
+
+- Dokumentationsstandards:
+  - JSDocs für alle Funktionen und Komponenten
+  - README.md für jedes Verzeichnis
+  - CHANGELOG.md für alle Änderungen
+  - API-Dokumentation in OpenAPI-Format
+
+## Lernprotokoll
+- Erkannte Muster:
+  - Claude funktioniert am besten mit strukturiertem Kontext
+  - MCP-Tools erhöhen die Fähigkeiten von Claude signifikant
+  - Persistente Speicherung ist kritisch für langfristige Projekte
+
+- Nutzerpräferenzen:
+  - Jan bevorzugt technische Details und Implementierungsansätze
+  - Serhan benötigt Business-Kontext und ROI-Fokus
+  - Beide schätzen direkten Kommunikationsstil ohne Umschweife
+
+- Projektspezifische Herausforderungen:
+  - Integration verschiedener Geschäftsbereiche in ein einheitliches System
+  - Balance zwischen Flexibilität und Standardisierung
+  - Sicherstellung der Persistenz und Zuverlässigkeit

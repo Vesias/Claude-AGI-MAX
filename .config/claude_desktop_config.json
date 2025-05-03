@@ -1,0 +1,43 @@
+{
+  "mcpServers": {
+    "proxyclaude": {
+      "command": "npx",
+      "args": ["-y", "@claude-agi/proxyclaude-mcp-server"],
+      "env": {
+        "API_ENDPOINT": "http://localhost:4001",
+        "MAX_RETRIES": "3"
+      }
+    },
+    "desktop-commander": {
+      "command": "npx",
+      "args": ["-y", "@wonderwhy-er/desktop-commander"]
+    },
+    "code-mcp": {
+      "command": "npx",
+      "args": ["-y", "@block/code-mcp"]
+    },
+    "sequentialthinking": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-sequential-thinking"]
+    },
+    "memory-bank": {
+      "command": "npx",
+      "args": ["-y", "@alioshr/memory-bank-mcp"],
+      "env": {
+        "MEMORY_BANK_ROOT": "/home/jan/Schreibtisch/CLAUDE/memory-bank"
+      }
+    },
+    "context7-mcp": {
+      "command": "npx",
+      "args": ["-y", "@upstash/context7-mcp"]
+    },
+    "brave-search": {
+      "command": "npx",
+      "args": ["-y", "@searchweb/brave-mcp", "--profile", "default"]
+    },
+    "imagen-generate": {
+      "command": "npx",
+      "args": ["-y", "@falahgs/imagen-3-0-generate-google-mcp-server"]
+    }
+  }
+}

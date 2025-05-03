@@ -1,0 +1,129 @@
+# KRITISCH: Befolge das "Opt-in" statt "Opt-out" Prinzip für Git
+# Ignoriere standardmäßig ALLES außer explizit erlaubten Dateien
+
+# Erste Regel in .gitignore: Alles ignorieren
+*
+**/
+!.gitignore
+
+# Dependency directories (redundant wegen * aber zur Klarheit)
+node_modules/
+**/node_modules/
+
+# Environment variables (redundant wegen * aber zur Klarheit)
+.env
+.env.local
+.env.*.local
+**/.env
+**/.env.local
+**/.env.*.local
+.about
+
+# Build outputs (redundant wegen * aber zur Klarheit) 
+dist/
+build/
+**/dist/
+**/build/
+
+# Erlaubte Basis-Komponenten der Claude-AGI-Infrastruktur
+!claude-terminal/**
+!claude-agi-project/**
+!memory-bank/
+!memory-bank/**
+!memory-bank/system/**
+!.claude-agi/
+!.claude-agi/**
+!.claude-agi/services/
+!.claude-agi/services/**
+!.config/
+!.config/**
+!docs/
+!docs/**
+!install-claude-agi-terminal.sh
+!install-claude-agi.sh
+!memory-bank/README.md
+!install-claude-agi-terminal.sh
+!install-claude-agi.sh
+!CLAUDE.md
+!.config/claude_desktop_config.json
+!scripts/core/**
+!scripts/install.sh
+!scripts/install.ts
+
+# Schlüsseldateien für die Hauptintegrationen
+!claude-code-integration/**
+!.claude-agi/services/proxyclaude/**
+!monitoring-system/**
+!docs/**
+!templates/**
+!vibe-coding-template/**
+
+# Wichtige READMEs und Dokumentation
+!README.md
+!LICENSE
+
+# Claude-AGI Workspace (ignoriert ALLE darin erstellten Dateien)
+.claude-agi/data/
+.claude-agi/logs/
+
+# Explizit verbotene Dateien/Verzeichnisse - redundant aber zur Sicherheit
+.env*
+.about*
+**/node_modules/**
+**/dist/**
+**/build/**
+*secrets*
+**personal**
+**private**
+**AClearAllB**
+**CustomGrow**
+**DeepSleep**
+**Bandolersoz**
+
+# Zusätzliche Regeln für node_modules innerhalb erlaubter Verzeichnisse
+claude-terminal/node_modules/
+claude-agi-project/**/node_modules/
+.claude-agi/services/proxyclaude/node_modules/
+claude-code-integration/**/node_modules/
+monitoring-system/**/node_modules/
+vibe-coding-template/**/node_modules/
+
+# IDE und Systemdateien
+.DS_Store
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# Build-Artefakte in Kernverzeichnissen
+claude-terminal/dist/
+claude-agi-project/**/dist/
+.claude-agi/services/proxyclaude/dist/
+claude-code-integration/**/dist/
+monitoring-system/**/dist/
+
+# Logs
+logs/
+**/logs/
+*.log
+npm-debug.log*
+
+# Backup-Dateien
+*.backup
+*.bak
+backup_temp/
+
+# Temporäre Dateien
+tmp/
+temp/
+.tmp/
+
+# Nutzerspezifische Projektdaten aber Konfigurationen erlauben
+!**/memory-bank/projectbrief.md
+!**/memory-bank/systemPatterns.md
+!**/memory-bank/techContext.md
+!**/memory-bank/sequentialThinking.config
+
+# Docx-Dateien von Dokumentation ausschließen (nur MD-Dateien erlauben)
+**/*.docx
