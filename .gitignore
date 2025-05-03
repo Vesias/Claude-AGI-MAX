@@ -1,36 +1,21 @@
 # KRITISCH: Befolge das "Opt-in" statt "Opt-out" Prinzip für Git
-# Ignoriere standardmäßig ALLES außer explizit erlaubten Dateien
+# Ignoriere standardmäßig ALLES außer explizit erlaubten Strukturen
 
 # Erste Regel in .gitignore: Alles ignorieren
 *
 **/
 !.gitignore
 
-# Dependency directories (redundant wegen * aber zur Klarheit)
-node_modules/
-**/node_modules/
-
-# Environment variables (redundant wegen * aber zur Klarheit)
-.env
-.env.local
-.env.*.local
-**/.env
-**/.env.local
-**/.env.*.local
-.about
-
-# Build outputs (redundant wegen * aber zur Klarheit) 
-dist/
-build/
-**/dist/
-**/build/
-
 # Erlaubte Basis-Komponenten der Claude-AGI-Infrastruktur
 !claude-terminal/**
-!claude-agi-project/**
+!claude-agi-projects/
+!claude-agi-projects/.project-config.json
+!claude-agi-projects/default-project/
+!claude-agi-projects/default-project/**
 !memory-bank/
 !memory-bank/**
-!memory-bank/system/**
+!memory-bank/templates/
+!memory-bank/templates/**
 !.claude-agi/
 !.claude-agi/**
 !.claude-agi/services/
@@ -41,32 +26,27 @@ build/
 !docs/**
 !install-claude-agi-terminal.sh
 !install-claude-agi.sh
-!memory-bank/README.md
-!install-claude-agi-terminal.sh
-!install-claude-agi.sh
 !CLAUDE.md
-!.config/claude_desktop_config.json
+!README.md
+!CONTRIBUTING.md
 !scripts/core/**
 !scripts/install.sh
 !scripts/install.ts
 
 # Schlüsseldateien für die Hauptintegrationen
 !claude-code-integration/**
-!.claude-agi/services/proxyclaude/**
 !monitoring-system/**
-!docs/**
 !templates/**
 !vibe-coding-template/**
 
 # Wichtige READMEs und Dokumentation
-!README.md
 !LICENSE
 
 # Claude-AGI Workspace (ignoriert ALLE darin erstellten Dateien)
 .claude-agi/data/
 .claude-agi/logs/
 
-# Explizit verbotene Dateien/Verzeichnisse - redundant aber zur Sicherheit
+# Explizite Ausschlüsse sensibler Projekte
 .env*
 .about*
 **/node_modules/**
@@ -75,22 +55,30 @@ build/
 *secrets*
 **personal**
 **private**
+**/goldankauf/
+**/goldankauf/**
+**/aclearallb.gg/
+**/aclearallb.gg/**
+**/neoaclearallbgg/
 **/neoaclearallbgg/**
 **/AClearAllB*
 **/aclearallb*
 **/CustomGrow*
 **/DeepSleep*
 **/Goldankauf*
+**/sj-bandolerosz/
+**/sj-bandolerosz/**
 **/SJ-Bandoler*
 **/Bandolersoz*
+**/deepsleeping/
+**/deepsleeping/**
 
-# Zusätzliche Regeln für node_modules innerhalb erlaubter Verzeichnisse
-claude-terminal/node_modules/
-claude-agi-project/**/node_modules/
-.claude-agi/services/proxyclaude/node_modules/
-claude-code-integration/**/node_modules/
-monitoring-system/**/node_modules/
-vibe-coding-template/**/node_modules/
+# Dependency directories
+node_modules/
+jspm_packages/
+
+# TypeScript cache
+*.tsbuildinfo
 
 # IDE und Systemdateien
 .DS_Store
@@ -100,25 +88,18 @@ vibe-coding-template/**/node_modules/
 *.swo
 *~
 
-# Build-Artefakte in Kernverzeichnissen
-claude-terminal/dist/
-claude-agi-project/**/dist/
-.claude-agi/services/proxyclaude/dist/
-claude-code-integration/**/dist/
-monitoring-system/**/dist/
-
 # Logs
 logs/
 **/logs/
 *.log
 npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
 
-# Backup-Dateien
+# Backup und temporäre Dateien
 *.backup
 *.bak
 backup_temp/
-
-# Temporäre Dateien
 tmp/
 temp/
 .tmp/

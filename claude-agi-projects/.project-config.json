@@ -1,0 +1,21 @@
+{
+  "version": "1.0.0",
+  "defaultProjectPath": "/home/jan/Schreibtisch/CLAUDE/claude-agi-projects/default-project",
+  "autoSwitchToProject": true,
+  "allowedDirectories": [
+    "/home/jan/Schreibtisch/CLAUDE/claude-agi-projects"
+  ],
+  "excludedPatterns": [
+    "**/node_modules/**",
+    "**/.git/**",
+    "**/.env*",
+    "**/goldankauf/**",
+    "**/aclearallb.gg/**",
+    "**/sj-bandolerosz/**",
+    "**/deepsleeping/**"
+  ],
+  "memoryBankConfig": {
+    "root": "/home/jan/Schreibtisch/CLAUDE/memory-bank",
+    "projectMemoryPath": "claude-agi-projects/{projectName}/memory-bank"
+  }
+}

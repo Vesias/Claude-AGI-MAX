@@ -1,189 +1,177 @@
-# CLAUDE-AGI: Komplettes Framework für KI-gestützte Entwicklung
+# CLAUDE-AGI: Standardisierte Entwicklungsumgebung für KI-Projekte
 
-*Version 1.0 • 2025-05-03*
+*Version 1.1 • 2025-05-03*
 
 > **⚠️ WICHTIG: Benötigt Claude Pro MAX Abonnement**
 > 
-> Dieses Framework erfordert ein aktives Claude Pro MAX Abonnement für die Nutzung aller Funktionen.
+> Dieses Framework erfordert ein aktives Claude Pro MAX Abonnement für die volle Funktionalität.
 
 ## 🌟 Überblick
 
-CLAUDE-AGI ist ein umfassendes Framework zur Projektverwaltung und -entwicklung mit Claude als KI-Assistenten. Es kombiniert:
+CLAUDE-AGI ist ein standardisiertes Framework für KI-gestützte Entwicklung mit einer sicheren, skalierbaren Projektstruktur:
 
-- **Memory-Bank-System**: Kontinuität zwischen Sitzungen
-- **MCP-Tools**: Erweiterte Funktionalität durch externe Tools
-- **Vibe-Coding-Stack**: Modern Web/Blockchain Development
-- **GitHub-Integration**: Private Repositories und Workflow-Automation
-- **ProxyClaude-Service**: Teilen von Claude-API-Zugängen im Team
+- **Standardisierte Projektstruktur**: Automatische Arbeitsumgebung in `claude-agi-projects/`
+- **Memory-Bank-System**: Projektbasierte Wissensverwaltung
+- **MCP-Tools-Integration**: Erweiterte Funktionalität ohne Smithery
+- **Datensicherheit**: Automatischer Ausschluss privater Projekte
+- **Skalierbare Architektur**: Vorbereitet für Enterprise-Nutzung
 
-## 📋 Inhaltsverzeichnis
+## 📁 Standardisierte Projektstruktur
 
-1. [Voraussetzungen](#voraussetzungen)
-2. [Installation](#installation)
-3. [Verfügbare MCP-Tools](#verfügbare-mcp-tools)
-4. [Vibe-Coding-Stack](#vibe-coding-stack)
-5. [Projektverwaltung](#projektverwaltung)
-6. [ProxyClaude-Service](#proxyclaude-service)
-7. [Dokumentation](#dokumentation)
-
-## 🔧 Voraussetzungen
-
-- **Node.js** (v20+)
-- **Git** (v2.40+)
-- **GitHub CLI** (v2.50+)
-- **Claude Desktop** (≥ v0.19)
-- **Claude Code** (≥ v0.12)
-- **Claude Pro MAX** Abonnement
-
-## 🚀 Installation
-
-### Sichere Installation (empfohlen)
-
-```bash
-# Lade das Installationsskript herunter
-curl -sSL https://github.com/claude-agi/cli/releases/download/v1.0/install-claude-agi.sh -O
-
-# Überprüfe Prüfsumme
-echo "abcdef1234567890abcdef1234567890 install-claude-agi.sh" | sha256sum -c
-
-# Führe Installer aus
-bash install-claude-agi.sh
+```
+/CLAUDE/
+├── claude-terminal/                # Terminal-Anwendung
+├── claude-agi-projects/           # Standardisiertes Projekt-Workspace
+│   ├── .project-config.json       # Globale Projektkonfiguration
+│   ├── default-project/           # Standard-Arbeitsverzeichnis
+│   │   └── memory-bank/           # Projekt-Memory-Bank
+│   └── [weitere-projekte]/        # Projektbasierte Organisation
+├── memory-bank/                   # Globale Templates
+│   └── templates/                 # Standard-Memory-Bank-Strukturen
+├── .claude-agi/                   # Service-Komponenten
+│   └── services/                  # ProxyClaude und andere Services
+├── .config/                       # MCP-Konfiguration
+└── .gitignore                     # Sichere Git-Konfiguration
 ```
 
-Der Installer führt dich durch den gesamten Prozess:
-- Überprüft Systemvoraussetzungen
-- Konfiguriert MCP-Tools ohne Smithery
-- Richtet das Vibe-Coding-Stack ein
-- Speichert API-Keys sicher in .env (nicht committet)
+## 🚀 Schnellstart
 
-### Manuelle Einrichtung
-
-Alternativ kannst du das System auch manuell einrichten:
-
-1. Repository klonen: `git clone https://github.com/YourUsername/claude-agi.git ~/.claude`
-2. Abhängigkeiten installieren: `cd ~/.claude && npm install`
-3. MCP-Tools konfigurieren: Bearbeite `.config/claude_desktop_config.json`
-4. API-Keys einrichten: Erstelle `.env` nach dem Vorbild von `.env.example`
-
-## 🛠️ Verfügbare MCP-Tools
-
-CLAUDE-AGI integriert zahlreiche MCP-Tools, organisiert nach Kategorien:
-
-| Kategorie | Beispiel-Tools | Anwendungsfälle |
-|-----------|----------------|-----------------|
-| **Core** | desktop-commander, code-mcp, sequentialthinking | Dateisystem, Code-Generierung, Problemanalyse |
-| **Web Automation** | browserbase, spider | Headless Browser, Web-Scraping |
-| **Vector & Memory** | qdrant, milvus, memory-bank | Embeddings, Vektordatenbanken, Kontext-Speicherung |
-| **Datenbanken** | db-mcp-server | PostgreSQL, MySQL, MongoDB Integration |
-| **Git & CI/CD** | github, git-mcp-server | PRs, Issues, Code-Reviews |
-| **PDF & Dokumente** | mcp-pdf-tools, pandoc | PDF-Bearbeitung, Format-Konvertierung |
-| **Übersetzung** | lara-translate, deepl | Multi-Sprach-Support |
-| **Messaging** | twilio, slack-mcp | SMS, WhatsApp, Slack-Integration |
-
-Vollständige Dokumentation: [MCP-Tools Referenz](./docs/mcp-tools-reference.md)
-
-## 💎 Vibe-Coding-Stack
-
-Der integrierte Vibe-Coding-Stack ist eine moderne Full-Stack-Entwicklungsumgebung:
-
-- **Next.js 15** (React 19)
-- **Supabase** (DB, Auth, Storage)
-- **Vercel** (Hosting, Edge Functions)
-- **shadcn/ui + Tailwind CSS** (UI-Komponenten)
-- **tRPC + Zod** (Typsichere API)
-- **Three.js + react-three-fiber** (3D-Visualisierungen)
-
-Mit Erweiterungen für Blockchain:
-- **Phantom Wallet** (Solana, ETH, BTC)
-- **wagmi + RainbowKit** (Ethereum)
-- **BTCPay Server** / **Stripe Crypto** (Payments)
-
-Details: [Vibe-Coding-Stack Dokumentation](./docs/vibe-coding-stack.md)
-
-## 📁 Projektverwaltung
-
-### Neues Projekt erstellen
+### 1. Installation
 
 ```bash
-# Standard-Projekt
-memory-bank init ProjektName
-
-# Vibe-Coding-Projekt
-memory-bank vibe ProjektName
+# Terminal installieren und Standardstruktur einrichten
+bash install-claude-agi-terminal.sh
 ```
 
-### Mit Memory-Bank arbeiten
+### 2. Arbeiten mit der Standardstruktur
 
-Jedes Projekt enthält eine Memory-Bank für Kontinuität zwischen Sitzungen:
-
-1. `projectbrief.md`: Grundlegende Projektdefinition
-2. `productContext.md`: Zweck und Problemlösung
-3. `activeContext.md`: Aktueller Fokus und nächste Schritte
-4. `systemPatterns.md`: Systemarchitektur und Design-Patterns
-5. `techContext.md`: Verwendete Technologien
-6. `progress.md`: Aktueller Status und Fortschritt
-
-Um die Memory-Bank zu aktualisieren:
-```bash
-memory-bank update ~/Schreibtisch/CLAUDE/ProjektName
-```
-
-## 🚀 ProxyClaude-Service
-
-ProxyClaude ermöglicht das Teilen eines Claude Pro MAX Accounts zwischen mehreren Teammitgliedern zum Festpreis:
-
-- Bis zu 6 Entwickler teilen sich einen Account
-- API-basierter Zugriff mit Authentifizierung
-- Stripe-Integration zur Zahlungsabwicklung (30€/Monat)
-- Rate Limiting und Monitoring
-
-### Einrichtung
+Die Terminal-Anwendung arbeitet automatisch in `claude-agi-projects/default-project/`:
 
 ```bash
-cd .claude-agi/services/proxyclaude
-npm install
-npm run build
-PORT=4001 npm start
+# Terminal starten - arbeitet automatisch im Standard-Projekt
+cd claude-terminal && npm start
 ```
 
-### Integration in Claude Desktop
+### 3. Neue Projekte erstellen
 
-ProxyClaude bindet sich nahtlos in die Claude Desktop App ein:
+```bash
+# Neues AGI-Projekt erstellen
+mkdir -p claude-agi-projects/mein-neues-projekt
+cp -r memory-bank/templates/* claude-agi-projects/mein-neues-projekt/memory-bank/
+```
+
+## 🔐 Sicherheitsfunktionen
+
+### Automatischer Ausschluss privater Projekte
+
+CLAUDE-AGI schützt automatisch sensible Projektdaten:
+
+```json
+{
+  "excludedPatterns": [
+    "**/goldankauf/**",
+    "**/aclearallb.gg/**", 
+    "**/sj-bandolerosz/**",
+    "**/deepsleeping/**",
+    "**/node_modules/**",
+    "**/.env*"
+  ]
+}
+```
+
+### Git-Sicherheit
+
+Die `.gitignore` verwendet das "Opt-in" statt "Opt-out" Prinzip:
+- Standardmäßig wird ALLES ignoriert
+- Nur explizit erlaubte Strukturen werden eingecheckt
+- Private Projekte werden niemals versehentlich committed
+
+## 🛠️ MCP-Tools ohne Smithery
+
+CLAUDE-AGI verwendet direkte NPM-Package-Referenzen statt Smithery:
 
 ```json
 {
   "mcpServers": {
-    "proxyclaude": {
+    "desktop-commander": {
       "command": "npx",
-      "args": ["-y", "@proxyclaude/mcp-server@latest"],
+      "args": ["-y", "@wonderwhy-er/desktop-commander"],
       "env": {
-        "API_ENDPOINT": "http://localhost:4001",
-        "MAX_RETRIES": "3"
+        "WORKSPACE_PATH": "/path/to/claude-agi-projects"
       }
     }
   }
 }
 ```
 
-Weitere Informationen: [ProxyClaude Komplettleitfaden](./.claude-agi/services/proxyclaude/README.md)
+Verfügbare Tools:
+- **Filesystem**: `@modelcontextprotocol/server-filesystem`
+- **Code**: `@block/code-mcp`
+- **Memory**: `@alioshr/memory-bank-mcp`
+- **Browser**: `@agentdeskai/browser-tools-mcp`
+- **Desktop**: `@wonderwhy-er/desktop-commander`
+
+## 💫 Memory-Bank-System
+
+Jedes Projekt enthält eine vollständige Memory-Bank:
+
+| Datei | Zweck |
+|-------|--------|
+| `projectbrief.md` | Projektdefinition und Ziele |
+| `activeContext.md` | Aktueller Arbeitsfokus |
+| `systemPatterns.md` | Architektur und Design |
+| `techContext.md` | Technologie-Stack |
+| `progress.md` | Fortschrittsverfolgung |
+
+### Memory-Bank aktualisieren
+
+```bash
+# Kontext für aktuelles Projekt aktualisieren
+cd claude-agi-projects/default-project
+claude.ai update-memory .
+```
+
+## 🎯 Workflow-Integration
+
+### Terminal-Workflow
+
+1. Terminal startet automatisch in `default-project/`
+2. Memory-Bank wird automatisch geladen
+3. MCP-Tools stehen sofort zur Verfügung
+4. Sichere Speicherung aller Änderungen
+
+### Git-Workflow
+
+```bash
+# Sichere Commits - nur erlaubte Strukturen
+git add .
+git commit -m "feat: Update standardized project structure"
+git push
+```
+
+## 🔄 Skalierung und Enterprise-Nutzung
+
+Die standardisierte Struktur ermöglicht:
+- **Team-Kollaboration**: Konsistente Umgebung für alle
+- **Projekt-Isolation**: Klare Trennung zwischen Projekten
+- **Automatisierte Workflows**: CI/CD-Integration
+- **Enterprise-Sicherheit**: Datenschutz und Compliance
 
 ## 📚 Dokumentation
 
-- [CLAUDE AGI Terminal Guide](./docs/TERMINAL_GUIDE.md): Installation und Verwendung des CLAUDE AGI Terminals
-- [Systemarchitektur](./docs/ARCHITECTURE.md): Detaillierte Architekturübersicht des Gesamtsystems
-- [ProxyClaude Guide](./docs/proxyclaude-guide.md): Integration und Nutzung von ProxyClaude
-- [Claude Code Leitfaden](./docs/claude-code-guide.md): Tutorials, Troubleshooting, CLI-Referenz
-- [MCP-Tools Referenz](./docs/mcp-tools-reference.md): Umfassende Tool-Liste mit Anleitungen
-- [Vibe-Coding-Stack](./docs/vibe-coding-stack.md): Kompletter Leitfaden für den Stack
+- [Architektur-Übersicht](./docs/ARCHITECTURE.md)
+- [Terminal-Guide](./docs/TERMINAL_GUIDE.md)
+- [MCP-Tools-Referenz](./docs/mcp-tools-reference.md)
+- [ProxyClaude-Service](./docs/proxyclaude-guide.md)
 
-## 🔐 Sicherheitshinweise
+## 📝 Lizenz
 
-- **Private Repositories**: Alle Projekt-Repos werden als privat konfiguriert
-- **Secrets-Schutz**: API-Keys werden in .env gespeichert und nicht committet
-- **Verified Tools**: Nutze bevorzugt offizielle oder verifizierte MCP-Server
+MIT License - siehe [LICENSE](LICENSE) für Details.
 
-## 🤝 Mitwirkung & Support
+## 🚦 Status
 
-- Probleme melden: [GitHub Issues](https://github.com/YourUsername/claude-agi/issues)
-- Dokumentation verbessern: PRs willkommen
-- Unterstützung: Discord-Server oder E-Mail an support@example.com
+- ✅ Standardisierte Projektstruktur
+- ✅ Sichere Git-Integration
+- ✅ MCP-Tools ohne Smithery
+- ✅ Memory-Bank-System
+- 🚧 Enterprise-Features in Entwicklung
